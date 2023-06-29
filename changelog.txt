@@ -1,0 +1,1 @@
+30.06.23->Fixed color issues, minor bugs
