@@ -1,0 +1,7 @@
+discord
+requests
+bs4
+pandas
+python-time
+typing
+disnake
