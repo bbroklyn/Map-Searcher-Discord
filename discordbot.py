@@ -27,7 +27,6 @@ status = discord.Status.do_not_disturb
 
 Version = "1.0"
 
-
 @Bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
@@ -38,7 +37,8 @@ async def on_command_error(ctx, error):
 async def on_ready():
     sleep(0.5)
     await Bot.change_presence(activity=disnake.Game(name="searching for the links..."), status=status)
-    print("game activity and bot status loaded")
+    print("Game activity loaded!")
+    print("Bot status loaded!")
 
 
 helpopt = commands.option_enum(["information", "commands"])
@@ -113,7 +113,7 @@ class Paginator(disnake.ui.View):
     async def show_page(self, page: int):
         pages = [self.items[i:i + ITEMS_PER_PAGE] for i in range(0, len(self.items), ITEMS_PER_PAGE)]
         if not pages:
-            embed = disnake.Embed(title=f"No results found for {self.name}", color=0x570320)
+            embed = disnake.Embed(title=f"No results found for {self.name}", color=0xFF0000)
             return embed
 
         page_items = pages[page - 1]
@@ -145,7 +145,6 @@ class Paginator(disnake.ui.View):
     @disnake.ui.button(label="Last ▶▶", style=disnake.ButtonStyle.grey)
     async def last_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(self.get_max_pages(), interaction)
-
     async def change_page(self, page: int, interaction: disnake.Interaction):
         await interaction.response.defer()
         if page < 1 or page > self.get_max_pages():
@@ -223,7 +222,7 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
 
 
 try:
-    print("Trying to start the bot...")
+    print("Starting the bot...")
     Bot.run(config["token"])
 except discord.errors.LoginFailure:
     exit("TOKEN IS INVALID")
