@@ -1,7 +1,7 @@
 """
     The Bot, which gives you a download link from the map name
             Bot by HeeChan  & Kassini    |       Version: 1.0
-                    https://github.com/HeeChann
+                    https://github.com/heechan194
 
 """
 import discord
@@ -26,7 +26,6 @@ activity = discord.Game(name="Searching for the links...")
 status = discord.Status.do_not_disturb
 
 Version = "1.0"
-ITEMS_PER_PAGE = 20
 
 
 @Bot.event
