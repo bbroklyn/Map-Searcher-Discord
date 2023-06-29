@@ -194,7 +194,8 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
                     "\n"
                     "\n **Thanks to:**"
                     "\n **NiceShot** - helped us with some things, gave idea about some features "
-                    "\n **koen** - we're using his FastDL.",
+                    "\n **koen** - we're using his FastDL."
+                    "\n **Killik** -Hosting for the bot.",
         color=0xFFFFFF
     )
     await inter.send(embed=embed)
