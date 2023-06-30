@@ -37,8 +37,9 @@ async def on_command_error(ctx, error):
 async def on_ready():
     sleep(0.5)
     await Bot.change_presence(activity=disnake.Game(name="searching for the links..."), status=status)
-    print("Game activity loaded!")
-    print("Bot status loaded!")
+    print("Game activity loaded. (1/3)")
+    print("Bot status loaded! (2/3)")
+    print("Bot enabled! (3/3)")
 
 
 helpopt = commands.option_enum(["information", "commands"])
@@ -117,7 +118,7 @@ class Paginator(disnake.ui.View):
             return embed
 
         page_items = pages[page - 1]
-        embed = disnake.Embed(title=f"Name {self.name} has results: {len(self.items)}", color=0xFFFFFF)
+        embed = disnake.Embed(title=f"Input {self.name} has results: {len(self.items)}", color=0xFFFFFF)
         embed.add_field(name="", value="Click the map name to download it!")
         for i, item in enumerate(page_items):
             embed.add_field(name="",
@@ -145,6 +146,7 @@ class Paginator(disnake.ui.View):
     @disnake.ui.button(label="Last ▶▶", style=disnake.ButtonStyle.grey)
     async def last_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(self.get_max_pages(), interaction)
+
     async def change_page(self, page: int, interaction: disnake.Interaction):
         await interaction.response.defer()
         if page < 1 or page > self.get_max_pages():
@@ -152,20 +154,21 @@ class Paginator(disnake.ui.View):
         self.current_page = page
         embed = await self.show_page(self.current_page)
         self.view = self
-        await interaction.edit_original_message(view=self.view, embed=embed)
-        await interaction.edit_original_response()
+        await interaction.edit_original_response(view=self.view, embed=embed)
 
     def get_max_pages(self):
         return (len(self.items) - 1) // ITEMS_PER_PAGE + 1
 
     async def start(self, inter: disnake.ApplicationCommandInteraction):
         embed = await self.show_page(self.current_page)
-        self.message = await inter.response.send_message(embed=embed, view=self, ephemeral=True)
-        self.view = self
+        self.message = await inter.edit_original_message(embed=embed, view=self)
+        self.view = self  # Добавляем ссылку на текущий объект view
+        await inter.edit_original_response()
 
 
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, name: str):
+    await inter.response.defer(ephemeral=True)
     url = 'https://www.notkoen.xyz/fastdl/csgo/maps/'
     response = requests.get(url)
     html = response.content
