@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.0
+            Bot by HeeChan  & Kassini    |       Version: 1.3
                     https://github.com/heechan194
 
 """
@@ -25,7 +25,7 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = discord.Game(name="Searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "1.2"
+Version = "1.3"
 
 @Bot.event
 async def on_command_error(ctx, error):
@@ -47,6 +47,7 @@ helpopt = commands.option_enum(["information", "commands"])
 
 @Bot.slash_command(name="helpme", description="Gives you every information about this bot/owners")
 async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
+    await inter.response.defer()
     help_things = {
         "information": "This Bot gives you a **link** to download the map by its name and much more!"
                        "\n"
@@ -69,22 +70,24 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
         )
         embed.add_field(name="", value="\n")
         embed.add_field(name="Current Version:", value=Version)
-        await inter.send(embed=embed)
+        await inter.edit_original_message(embed=embed)
 
 
 @Bot.slash_command(name="shutdown", description="Kills the bot")
 async def shutdown(inter: disnake.ApplicationCommandInteraction):
+    await inter.response.defer()
     if inter.user.id in [1041292965483651102, 390221466689339392]:
-        await inter.send("Successfully shut down!")
+        await inter.edit_original_message("Successfully shut down!")
         print(Bot.user.name)
         sleep(1)
         exit("Bot has been killed by an Admin!")
     else:
-        await inter.send("You don't have permissions to use this command!")
+        await inter.edit_original_message("You don't have permissions to use this command!")
 
 
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
+    await inter.response.defer()
     if config["url"] == "":
         await inter.send("FastDL links is empty at the moment!")
     else:
@@ -95,7 +98,7 @@ async def fastdl(inter: disnake.ApplicationCommandInteraction):
                         "\n" + config["url"],
             color=0xFFFFFF
         )
-        await inter.send(embed=fastdl_embed)
+        await inter.edit_original_message(embed=fastdl_embed)
 
 
 ITEMS_PER_PAGE = 20
@@ -191,17 +194,18 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, name: str):
 
 @Bot.slash_command(name="credits", description="Credits to people, who helped in writing this bot")
 async def credits(inter: disnake.ApplicationCommandInteraction):
+    await inter.response.defer()
     embed = disnake.Embed(
         title="Credits",
         description=""
                     "\n"
                     "\n **Thanks to:**"
-                    "\n **NiceShot** - helped us with some things, gave idea about some features "
-                    "\n **koen** - we're using his FastDL."
-                    "\n **Killik** -Hosting for the bot.",
+                    "\n **NiceShot** -> helped us with some things, gave idea about some features "
+                    "\n **koen** -> we are using his FastDL."
+                    "\n **Killik** -> Hosting for the bot.",
         color=0xFFFFFF
     )
-    await inter.send(embed=embed)
+    await inter.edit_original_message(embed=embed)
 
 
 packvote = commands.option_enum(["Zeddy", "GFL", "Mapeadores"])
@@ -209,6 +213,7 @@ packvote = commands.option_enum(["Zeddy", "GFL", "Mapeadores"])
 
 @Bot.slash_command(name="pack", description="Download resource packs of various servers!")
 async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
+    await inter.response.defer()
     packs = {
         "Zeddy": "https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z",
         "GFL": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20Resource%20Pack.7z",
@@ -220,9 +225,9 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
             description=f"[{pack} Resource Pack]({packs[pack]})",
             color=0xFFFFFF
         )
-        await inter.send(embed=embed)
+        await inter.edit_original_message(embed=embed)
     else:
-        await inter.send("You wrote something wrong, please check it!")
+        await inter.edit_original_message("You wrote something wrong, please check it!")
 
 
 try:
