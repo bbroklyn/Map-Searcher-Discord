@@ -114,11 +114,11 @@ class Paginator(disnake.ui.View):
     async def show_page(self, page: int):
         pages = [self.items[i:i + ITEMS_PER_PAGE] for i in range(0, len(self.items), ITEMS_PER_PAGE)]
         if not pages:
-            embed = disnake.Embed(title=f"No results found for {self.name}", color=0xFF0000)
+            embed = disnake.Embed(title=f"No results found for `{self.name}`", color=0xFF0000)
             return embed
 
         page_items = pages[page - 1]
-        embed = disnake.Embed(title=f"Input {self.name} has results: {len(self.items)}", color=0xFFFFFF)
+        embed = disnake.Embed(title=f"Input `{self.name}` has results: **{len(self.items)}**", color=0xFFFFFF)
         embed.add_field(name="", value="Click the map name to download it!")
         for i, item in enumerate(page_items):
             embed.add_field(name="",
