@@ -1,1 +1,2 @@
-30.06.23->Fixed color issues, minor bugs, crash issue
+30.06.23->Fixed color issues, minor bugs, crash issue;
+1.07.23->updated design things.
