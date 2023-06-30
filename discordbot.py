@@ -25,7 +25,7 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = discord.Game(name="Searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "1.0"
+Version = "1.1"
 
 @Bot.event
 async def on_command_error(ctx, error):

@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **1.0**
+Bot version : **1.1**
 
 a Python bot for Discord, which searches for maps by their name and etc!
 
