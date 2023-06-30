@@ -25,4 +25,4 @@ Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194
 
 
 # Future updates:
-We are about to re-write some commands, make better code optimization and make bot usable for `CS:S` as well.
+- We are about to re-write some commands, make better code optimization and make bot usable for `CS:S` as well.
