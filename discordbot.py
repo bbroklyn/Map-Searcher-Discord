@@ -201,6 +201,7 @@ fastdllnik = commands.option_enum(["CS:GO", "CS:S"])
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdllnik, mapname: str):
     await inter.response.defer(ephemeral=True)
+    name = mapname
     url = 0
     urlreplace = 0
     if choice == "CS:GO":
