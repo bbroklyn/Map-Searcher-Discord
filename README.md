@@ -1,10 +1,31 @@
 # Map Searcher Bot for Discord
 
-Bot version : **1.5**
+Bot version : **1.6**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/helpme`.
 
 At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**.
+
+
+# Commands
+
+- You can see every commands bellow or type `/`
+
+# For everyone
+
+`/helpme <information> <commands>` - Gives you every information about this bot/owners.
+
+`/fastdl` - Gives you the link to download the map!
+
+`/maplink <CS:S/CS:GO> <mapname>` - Gives you the link to download the map!
+
+`/credits` - Credits to people, who helped in writing this bot
+
+`/pack <Zeddy/GFL/Mapeadores>` - Download resource packs of various servers!
+
+# For Admins
+
+`/admin <shutdown> <restart>` - Admin commands.
 
 
 # How to install this bot for your server?

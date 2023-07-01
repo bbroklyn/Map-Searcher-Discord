@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.5
+            Bot by HeeChan  & Kassini    |       Version: 1.6
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -8,13 +8,15 @@
 """
 import discord
 import json
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
+import sys
+import os
 
+import requests
+import disnake
+import pandas as pd
+from bs4 import BeautifulSoup
 from time import sleep
 from typing import Optional, List
-import disnake
 from disnake.ext import commands
 from disnake.ui import Button
 
@@ -25,10 +27,10 @@ intents = discord.Intents.all()
 intents.message_content = True
 
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-activity = discord.Game(name="Searching for the links...")
+activity = disnake.Game(name="searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "1.5"
+Version = "1.6"
 
 @Bot.event
 async def on_command_error(ctx, error):
@@ -39,10 +41,10 @@ async def on_command_error(ctx, error):
 @Bot.event
 async def on_ready():
     sleep(0.5)
-    await Bot.change_presence(activity=disnake.Game(name="searching for the links..."), status=status)
+    await Bot.change_presence(activity=activity, status=status)
     print("+ Game activity. [1/2]")
     print("+ Bot status [2/2]")
-    print("Log : "+str(Bot.user))
+    print("logged in as: "+str(Bot.user))
 
 
 helpopt = commands.option_enum(["information", "commands"])
@@ -80,8 +82,9 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
         await inter.edit_original_message(embed=embed, components=[Gitbutton, Invitebutton])
 
 
-adminoption = commands.option_enum(["shutdown", "restart"])
 
+
+adminoption = commands.option_enum(["shutdown", "restart"])
 
 @Bot.slash_command(name="admin", description="Admin commands.")
 async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoption):
@@ -89,24 +92,23 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
     allowed_users = [1041292965483651102, 390221466689339392]
     if inter.user.id in allowed_users:
         if choice == "shutdown":
-            await inter.edit_original_message(content="Successfully shut down!")
-            sleep(1)
-            exit("Bot has been killed by an Admin!")
+            await inter.edit_original_message(content="Successfully shut down by " + inter.author.mention)
+            print("Bot has been killed by\n ", inter.author)
+            #raise exit("Bot has been killed by an Admin!")
+            raise SystemExit("Bot has been killed by\n", inter.author)
         elif choice == "restart":
-            import os
-            await inter.edit_original_message(content="the bot is restarting by the Admin...")
-            sleep(1)
-            await inter.edit_original_message(content="~~the bot is restarting by the Admin...~~ \nRestarted!")
-            os.system("python3 discordbot.py")
+            await inter.edit_original_message(content="the bot is restarting by " + inter.author.mention)
+            print("Bot has been restarted by:", inter.author)
+            python = sys.executable
+            os.execl(python, python, * sys.argv)
     else:
-        await inter.edit_original_message(content="You don't have permissions to use this command!")
-
-
+        await inter.edit_original_message(content="❗ -> **You don't have permissions to use this command!**")
+            
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
     if config["url"] == "":
-        await inter.send("FastDL links is empty at the moment!")
+        await inter.send("❗ -> **FastDL links is empty at the moment!**")
     else:
         fastdl_embed = disnake.Embed(
             title="FastDL",
@@ -122,11 +124,12 @@ ITEMS_PER_PAGE = 20
 
 
 class Paginator(disnake.ui.View):
-    def __init__(self, items: List[str], link: List[str], name, timeout: Optional[float] = None):
+    def __init__(self, items: List[str], link: List[str], name, choice, timeout: Optional[float] = None):
         super().__init__(timeout=timeout)
         self.items = items
         self.link = link
         self.name = name
+        self.choice = choice
         self.view = None
         self.current_page = 1
         self.message = None
@@ -136,7 +139,7 @@ class Paginator(disnake.ui.View):
         self.next_page_button.disabled = self.last_page_button.disabled = (page == self.get_max_pages())
         pages = [self.items[i:i + ITEMS_PER_PAGE] for i in range(0, len(self.items), ITEMS_PER_PAGE)]
         if not pages:
-            embed = disnake.Embed(title=f"No results found for `{self.name}`", color=0xFF0000)
+            embed = disnake.Embed(title=f"❗ No results found for `{self.name}`", color=0xFF0000)
             return embed
 
         page_items = pages[page - 1]
@@ -144,7 +147,7 @@ class Paginator(disnake.ui.View):
         embed.add_field(name="", value="Click the map name to download it!")
         for i, item in enumerate(page_items):
             embed.add_field(name="",
-                            value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]})",
+                            value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]}) [{self.choice}]",
                             inline=False)
         self.next_page.label = f"Page {self.current_page}/{self.get_max_pages()}"
         return embed
@@ -181,7 +184,7 @@ class Paginator(disnake.ui.View):
     def get_max_pages(self):
         return (len(self.items) - 1) // ITEMS_PER_PAGE + 1
 
-    async def start(self, inter: disnake.ApplicationCommandInteraction):  
+    async def start(self, inter: disnake.ApplicationCommandInteraction):
         if self.get_max_pages() <= 1:
             self.clear_items()
         elif self.get_max_pages() == 2:
@@ -193,10 +196,20 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
+fastdllnik = commands.option_enum(["CS:GO", "CS:S"])
+
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
-async def maplink(inter: disnake.ApplicationCommandInteraction, name: str):
+async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdllnik, mapname: str):
     await inter.response.defer(ephemeral=True)
-    url = 'https://www.notkoen.xyz/fastdl/csgo/maps/'
+    url = 0
+    urlreplace = 0
+    if choice == "CS:GO":
+        url = 'https://www.notkoen.xyz/fastdl/csgo/maps/'
+        urlreplace = "https://www.notkoen.xyz"
+    elif choice == "CS:S":
+        url = 'https://fastdl.unloze.com/css_ze/maps/'
+        urlreplace = "https://fastdl.unloze.com/css_ze/maps/"
+
     response = requests.get(url)
     html = response.content
     soup = BeautifulSoup(html, 'html.parser')
@@ -206,13 +219,13 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, name: str):
     for a_tag in a_tags:
         href = a_tag['href']
         if pd.Series(href.lower()).str.contains(name.lower()).any():
-            link.append("https://www.notkoen.xyz" + href)
-            namemap.append('https://www.notkoen.xyz' + href)
+            link.append(urlreplace + href)
+            namemap.append(urlreplace + href)
         for i in range(len(namemap)):
-            namemap[i] = namemap[i].replace('https://www.notkoen.xyz/fastdl/csgo/maps/', '')
+            namemap[i] = namemap[i].replace(url, '')
             namemap[i] = namemap[i].replace('.bsp.bz2', '')
             namemap[i] = namemap[i].replace('.bsp', '')
-    paginator = Paginator(namemap, link, name)
+    paginator = Paginator(namemap, link, name, choice)
     await paginator.start(inter)
 
 
@@ -251,7 +264,7 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
         )
         await inter.edit_original_message(embed=embed)
     else:
-        await inter.edit_original_message("You wrote something wrong, please check it!")
+        await inter.edit_original_message("❗ -> **You wrote something wrong, please check it!**")
 
 
 try:
