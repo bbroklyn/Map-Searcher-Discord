@@ -46,4 +46,4 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Future updates:
-- We are about to re-write some commands, make better code optimization and make bot usable for `CS:S` as well.
+- We are about to re-write some commands, make better code optimization and make new commands.
