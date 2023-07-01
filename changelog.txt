@@ -1,2 +1,2 @@
 30.06.23->Fixed color issues, minor bugs, crash issue;
-1.07.23->updated design things, fixed an issue where command take more than 3 seconds. Changed buttons. Now, if theres only 1 list, buttons will not show up. Same for two lists.
+1.07.23->updated design things, fixed an issue where command take more than 3 seconds. Changed buttons. Now, if theres only 1 list, buttons will not show up. Same for two lists. Reworked /shutdown (/admin) and /helpme commands.

@@ -1,7 +1,9 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.4
+            Bot by HeeChan  & Kassini    |       Version: 1.5
+            https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
+                    https://github.com/KassiniGit
 
 """
 import discord
@@ -14,6 +16,7 @@ from time import sleep
 from typing import Optional, List
 import disnake
 from disnake.ext import commands
+from disnake.ui import Button
 
 file = open("config.json", "r")
 config = json.load(file)
@@ -25,7 +28,7 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = discord.Game(name="Searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "1.4"
+Version = "1.5"
 
 @Bot.event
 async def on_command_error(ctx, error):
@@ -37,9 +40,9 @@ async def on_command_error(ctx, error):
 async def on_ready():
     sleep(0.5)
     await Bot.change_presence(activity=disnake.Game(name="searching for the links..."), status=status)
-    print("Game activity loaded. (1/3)")
-    print("Bot status loaded! (2/3)")
-    print("Bot enabled! (3/3)")
+    print("+ Game activity. [1/2]")
+    print("+ Bot status [2/2]")
+    print("Log : "+str(Bot.user))
 
 
 helpopt = commands.option_enum(["information", "commands"])
@@ -53,7 +56,8 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                        "\n"
                        "\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
                        "\n You can contract us, **heechan194** or **.kassini**"
-                       "\n",
+                       "\n"
+                       "\n Version: " + Version,
         "commands": "\n **Bot Commands:**"
                     "\n"
                     "\n </maplink:1123674597494100119> - Gives you the link to download the map from name."
@@ -68,21 +72,34 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
             description=f"{help_things[choice]}",
             color=0xFFFFFF
         )
-        embed.add_field(name="", value="\n")
-        embed.add_field(name="Current Version:", value=Version)
-        await inter.edit_original_message(embed=embed)
+        Gitbutton = Button(label="GitHub", style=disnake.ButtonStyle.url,
+                        url="https://github.com/heechan194/Map-Searcher-Bot")
+        Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
+                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
+
+        await inter.edit_original_message(embed=embed, components=[Gitbutton, Invitebutton])
 
 
-@Bot.slash_command(name="shutdown", description="Kills the bot")
-async def shutdown(inter: disnake.ApplicationCommandInteraction):
+adminoption = commands.option_enum(["shutdown", "restart"])
+
+
+@Bot.slash_command(name="admin", description="Admin commands.")
+async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoption):
     await inter.response.defer()
-    if inter.user.id in [1041292965483651102, 390221466689339392]:
-        await inter.edit_original_message("Successfully shut down!")
-        print(Bot.user.name)
-        sleep(1)
-        exit("Bot has been killed by an Admin!")
+    allowed_users = [1041292965483651102, 390221466689339392]
+    if inter.user.id in allowed_users:
+        if choice == "shutdown":
+            await inter.edit_original_message(content="Successfully shut down!")
+            sleep(1)
+            exit("Bot has been killed by an Admin!")
+        elif choice == "restart":
+            import os
+            await inter.edit_original_message(content="the bot is restarting by the Admin...")
+            sleep(1)
+            await inter.edit_original_message(content="~~the bot is restarting by the Admin...~~ \nRestarted!")
+            os.system("python3 discordbot.py")
     else:
-        await inter.edit_original_message("You don't have permissions to use this command!")
+        await inter.edit_original_message(content="You don't have permissions to use this command!")
 
 
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
