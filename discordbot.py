@@ -64,7 +64,7 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                     "\n"
                     "\n </maplink:1123674597494100119> - Gives you the link to download the map from name."
                     "\n </fastdl:1123717659637321749> - Link to FastDL"
-                    "\n </shutdown:1123709315887403078> - Shutdowns the bot. Only for Admins!"
+                    "\n </admin:1124782641581916200> - Shutdowns the bot. Only for Admins!"
                     "\n </credits:1123702310837686292> - Credits to people, who helped in writing this bot"
                     "\n </helpme:1123680440662904933> - Information/commands about this bot",
     }
