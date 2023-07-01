@@ -107,14 +107,15 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
-    if config["url"] == "":
-        await inter.send("❗ -> **FastDL links is empty at the moment!**")
+    if config["url"] and config["unloze_url"] == "":
+        await inter.send("❗ -> FastDL links is empty at the moment!")
     else:
         fastdl_embed = disnake.Embed(
             title="FastDL",
             description="Below are links to all FastDL that the bot uses:"
                         "\n"
-                        "\n" + config["url"],
+                        "\n" + config["url"] +
+                        "\n" + config["unloze_url"],
             color=0xFFFFFF
         )
         await inter.edit_original_message(embed=fastdl_embed)
