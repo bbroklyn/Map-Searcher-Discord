@@ -162,7 +162,9 @@ class Paginator(disnake.ui.View):
     def get_max_pages(self):
         return (len(self.items) - 1) // ITEMS_PER_PAGE + 1
 
-    async def start(self, inter: disnake.ApplicationCommandInteraction):
+    async def start(self, inter: disnake.ApplicationCommandInteraction):  
+        if self.get_max_pages() <= 1:
+            self.clear_items()
         embed = await self.show_page(self.current_page)
         self.message = await inter.edit_original_message(embed=embed, view=self)
         self.view = self  # Добавляем ссылку на текущий объект view
