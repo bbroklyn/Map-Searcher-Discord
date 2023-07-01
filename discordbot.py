@@ -30,7 +30,7 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = disnake.Game(name="searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "1.6"
+Version = "The latest one is `1.6`"
 
 @Bot.event
 async def on_command_error(ctx, error):
@@ -54,10 +54,14 @@ helpopt = commands.option_enum(["information", "commands"])
 async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
     await inter.response.defer()
     help_things = {
-        "information": "This Bot gives you a **link** to download the map by its name and much more!"
+        "information": "**information about Map Searcher:**"
                        "\n"
                        "\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
                        "\n You can contract us, **heechan194** or **.kassini**"
+                       "\n"
+                       "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </helpme:1123680440662904933>."
+                       "\n"
+                       "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
                        "\n"
                        "\n Version: " + Version,
         "commands": "\n **Bot Commands:**"
@@ -74,12 +78,16 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
             description=f"{help_things[choice]}",
             color=0xFFFFFF
         )
-        Gitbutton = Button(label="GitHub", style=disnake.ButtonStyle.url,
+        Gitbuttonheechan = Button(label="HeeChan", style=disnake.ButtonStyle.url,
+                        url="https://github.com/heechan194")
+        Gitbuttonkassini = Button(label="Kassini", style=disnake.ButtonStyle.url,
+                        url="https://github.com/KassiniGit")
+        Gitbutton = Button(label="Bot Open Code", style=disnake.ButtonStyle.url,
                         url="https://github.com/heechan194/Map-Searcher-Bot")
         Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
                            url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
 
-        await inter.edit_original_message(embed=embed, components=[Gitbutton, Invitebutton])
+        await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
 
 
 
