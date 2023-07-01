@@ -115,6 +115,8 @@ class Paginator(disnake.ui.View):
         self.message = None
 
     async def show_page(self, page: int):
+        self.first_page_button.disabled = self.previous_page_button.disabled = (page == 1)
+        self.next_page_button.disabled = self.last_page_button.disabled = (page == self.get_max_pages())
         pages = [self.items[i:i + ITEMS_PER_PAGE] for i in range(0, len(self.items), ITEMS_PER_PAGE)]
         if not pages:
             embed = disnake.Embed(title=f"No results found for `{self.name}`", color=0xFF0000)
@@ -165,6 +167,9 @@ class Paginator(disnake.ui.View):
     async def start(self, inter: disnake.ApplicationCommandInteraction):  
         if self.get_max_pages() <= 1:
             self.clear_items()
+        elif self.get_max_pages() == 2:
+            self.remove_item(self.first_page_button)
+            self.remove_item(self.last_page_button)
         embed = await self.show_page(self.current_page)
         self.message = await inter.edit_original_message(embed=embed, view=self)
         self.view = self  # Добавляем ссылку на текущий объект view
