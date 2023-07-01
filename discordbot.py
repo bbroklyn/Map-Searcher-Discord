@@ -78,6 +78,7 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
             description=f"{help_things[choice]}",
             color=0xFFFFFF
         )
+        embed.set_thumbnail(url="https://i.pinimg.com/564x/a6/ce/74/a6ce746599c3834a587af159d448978c.jpg")
         Gitbuttonheechan = Button(label="HeeChan", style=disnake.ButtonStyle.url,
                         url="https://github.com/heechan194")
         Gitbuttonkassini = Button(label="Kassini", style=disnake.ButtonStyle.url,
