@@ -68,7 +68,7 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                     "\n"
                     "\n </maplink:1123674597494100119> - Gives you the link to download the map from name."
                     "\n </fastdl:1123717659637321749> - Link to FastDL"
-                    "\n </admin:1124782641581916200> - Shutdowns the bot. Only for Admins!"
+                    "\n </admin:1125154934904586363> - Admin commands. Can restart/shutdown bot."
                     "\n </credits:1123702310837686292> - Credits to people, who helped in writing this bot"
                     "\n </helpme:1123680440662904933> - Information/commands about this bot",
     }
@@ -111,6 +111,7 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
             python = sys.executable
             os.execl(python, python, * sys.argv)
     else:
+        print(inter.author, "<- tried to use the admin command without permissions!")
         await inter.edit_original_message(content="❗ -> **You don't have permissions to use this command!**")
             
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
@@ -248,7 +249,7 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
         description=""
                     "\n"
                     "\n **Thanks to:**"
-                    "\n **NiceShot** -> helped us with some things, gave idea about some features "
+                    "\n **NiceShot** -> helped us with some things, gave idea about some features."
                     "\n **koen** -> we are using his FastDL."
                     "\n **Killik** -> Hosting for the bot."
                     "\n **Unloze** -> For FastDL.",

@@ -1,3 +1,4 @@
 30.06.23->Fixed color issues, minor bugs, crash issue;
 1.07.23->updated design things, fixed an issue where command take more than 3 seconds. Changed buttons. Now, if theres only 1 list, buttons will not show up. Same for two lists. Reworked /shutdown (/admin) and /helpme commands.
 2.07.23->fixed an issue with /admin command.
+3.07.23->now it says if somebody trying to kill/restart the bot without permissions. fixed an issue with /helpme
