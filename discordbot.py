@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.6
+            Bot by HeeChan  & Kassini    |       Version: 1.7
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -30,7 +30,7 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = disnake.Game(name="searching for the links...")
 status = discord.Status.do_not_disturb
 
-Version = "The latest one is `1.6`"
+Version = "The latest one is `1.7`"
 
 @Bot.event
 async def on_command_error(ctx, error):
@@ -104,10 +104,10 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
             await inter.edit_original_message(content="Successfully shut down by " + inter.author.mention)
             print("Bot has been killed by\n ", inter.author)
             #raise exit("Bot has been killed by an Admin!")
-            raise SystemExit("Bot has been killed by\n", inter.author)
+            raise SystemExit("Bot has been killed by\n", inter.author, "in",  inter.channel)
         elif choice == "restart":
             await inter.edit_original_message(content="the bot is restarting by " + inter.author.mention)
-            print("Bot has been restarted by:", inter.author)
+            print("Bot has been restarted by:", inter.author, "in" , inter.channel)
             python = sys.executable
             os.execl(python, python, * sys.argv)
     else:
@@ -250,7 +250,8 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
                     "\n **Thanks to:**"
                     "\n **NiceShot** -> helped us with some things, gave idea about some features "
                     "\n **koen** -> we are using his FastDL."
-                    "\n **Killik** -> Hosting for the bot.",
+                    "\n **Killik** -> Hosting for the bot."
+                    "\n **Unloze** -> For FastDL.",
         color=0xFFFFFF
     )
     await inter.edit_original_message(embed=embed)

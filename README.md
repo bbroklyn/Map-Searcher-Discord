@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **1.6**
+Bot version : **1.7**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/helpme`.
 
