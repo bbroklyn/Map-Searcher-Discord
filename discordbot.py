@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.7
+            Bot by HeeChan  & Kassini    |       Version: 1.8
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -10,15 +10,17 @@ import discord
 import json
 import sys
 import os
+import datetime
 
 import requests
 import disnake
 import pandas as pd
 from bs4 import BeautifulSoup
-from time import sleep
+import time
 from typing import Optional, List
 from disnake.ext import commands
 from disnake.ui import Button
+
 
 file = open("config.json", "r")
 config = json.load(file)
@@ -27,50 +29,95 @@ intents = discord.Intents.all()
 intents.message_content = True
 
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-activity = disnake.Game(name="searching for the links...")
+activity = disnake.Game(name="( ͡° ͜ʖ ͡°)")
 status = discord.Status.do_not_disturb
 
-Version = "The latest one is `1.7`"
+global startTime
+startTime = time.time() # to prevent some issues
+Version = "`1.8`"
+
+class UTC(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+@Bot.event
+async def on_slash_command_error(inter: disnake.ApplicationCommandInteraction, error: Exception) -> None:
+    return
 
 @Bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
-
-
+    raise error 
+    
 @Bot.event
 async def on_ready():
-    sleep(0.5)
     await Bot.change_presence(activity=activity, status=status)
-    print("+ Game activity. [1/2]")
-    print("+ Bot status [2/2]")
+    global startTime
+    startTime = time.time()
+    time.sleep(0.50)
+    print("Loading bot data...")
+    time.sleep(1.00)
+    print("+ Game activity. [1/3]")
+    time.sleep(1.00)
+    print("+ Bot status. [2/3]")
+    time.sleep(1.00)
+    print("+ UpTime. [3/3]")
+    time.sleep(1.00)
     print("logged in as: "+str(Bot.user))
 
 
-helpopt = commands.option_enum(["information", "commands"])
-
-
-@Bot.slash_command(name="helpme", description="Gives you every information about this bot/owners")
-async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
+@Bot.slash_command(name="about", description="Information about this bot.")
+async def about(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
-    help_things = {
-        "information": "**information about Map Searcher:**"
+    uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+    embed = disnake.Embed(
+            description="\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
+                       "\n You can contract us in discord, **heechan194** or **.kassini**"
                        "\n"
-                       "\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
-                       "\n You can contract us, **heechan194** or **.kassini**"
-                       "\n"
-                       "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </helpme:1123680440662904933>."
+                       "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </help:1125453195750166538>."
                        "\n"
                        "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
-                       "\n"
-                       "\n Version: " + Version,
+                       "\n",
+            color=0xFFFFFF
+        )
+    embed.set_thumbnail(url="https://i.pinimg.com/564x/a6/ce/74/a6ce746599c3834a587af159d448978c.jpg")
+    Gitbuttonheechan = Button(label="HeeChan", style=disnake.ButtonStyle.url,
+                        url="https://github.com/heechan194")
+    Gitbuttonkassini = Button(label="Kassini", style=disnake.ButtonStyle.url,
+                        url="https://github.com/KassiniGit")
+    Gitbutton = Button(label="Source Code", style=disnake.ButtonStyle.url,
+                        url="https://github.com/heechan194/Map-Searcher-Bot")
+    Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
+                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
+
+    embed.set_author(
+    name="Map Searcher:",
+    url="https://github.com/heechan194/Map-Searcher-Bot",
+    icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
+    )
+    embed.add_field(name="Version:", value=Version)
+    embed.add_field(name="UpTime:", value="`"+uptime+"`")
+    await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
+
+def setup(bot):
+    bot.add_cog(UTC(bot))
+
+
+helpopt = commands.option_enum(["commands"])
+
+@Bot.slash_command(name="help", description="Gives you every information about this bot/owners")
+async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
+    await inter.response.defer()
+    help_things = {
         "commands": "\n **Bot Commands:**"
                     "\n"
                     "\n </maplink:1123674597494100119> - Gives you the link to download the map from name."
-                    "\n </fastdl:1123717659637321749> - Link to FastDL"
+                    "\n </fastdl:1123717659637321749> - Link to FastDL."
                     "\n </admin:1125154934904586363> - Admin commands. Can restart/shutdown bot."
                     "\n </credits:1123702310837686292> - Credits to people, who helped in writing this bot"
-                    "\n </helpme:1123680440662904933> - Information/commands about this bot",
+                    "\n </help:1125453195750166538> - Navigation help command."
+                    "\n </about:1125443661547712644> - About this bot.",
     }
     if choice in help_things:
         embed = disnake.Embed(
@@ -78,18 +125,7 @@ async def helpme(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
             description=f"{help_things[choice]}",
             color=0xFFFFFF
         )
-        embed.set_thumbnail(url="https://i.pinimg.com/564x/a6/ce/74/a6ce746599c3834a587af159d448978c.jpg")
-        Gitbuttonheechan = Button(label="HeeChan", style=disnake.ButtonStyle.url,
-                        url="https://github.com/heechan194")
-        Gitbuttonkassini = Button(label="Kassini", style=disnake.ButtonStyle.url,
-                        url="https://github.com/KassiniGit")
-        Gitbutton = Button(label="Bot Open Code", style=disnake.ButtonStyle.url,
-                        url="https://github.com/heechan194/Map-Searcher-Bot")
-        Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
-                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
-
-        await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
-
+        await inter.edit_original_message(embed=embed)
 
 
 
@@ -101,19 +137,19 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
     allowed_users = [1041292965483651102, 390221466689339392]
     if inter.user.id in allowed_users:
         if choice == "shutdown":
-            await inter.edit_original_message(content="Successfully shut down by " + inter.author.mention)
+            await inter.edit_original_message(content="✔️ -> **Successfully shut down by** " + inter.author.mention)
             print("Bot has been killed by\n ", inter.author)
             #raise exit("Bot has been killed by an Admin!")
             raise SystemExit("Bot has been killed by\n", inter.author, "in",  inter.channel)
         elif choice == "restart":
-            await inter.edit_original_message(content="the bot is restarting by " + inter.author.mention)
+            await inter.edit_original_message(content="✔️ -> **The bot is restarting by** " + inter.author.mention)
             print("Bot has been restarted by:", inter.author, "in" , inter.channel)
             python = sys.executable
             os.execl(python, python, * sys.argv)
     else:
         print(inter.author, "<- tried to use the admin command without permissions!")
         await inter.edit_original_message(content="❗ -> **You don't have permissions to use this command!**")
-            
+
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
@@ -258,7 +294,7 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
     await inter.edit_original_message(embed=embed)
 
 
-packvote = commands.option_enum(["Zeddy", "GFL", "Mapeadores"])
+packvote = commands.option_enum(["Zeddy", "GFL", "Mapeadores", "ZombieDen", "MoeUB", "ExG"])
 
 
 @Bot.slash_command(name="pack", description="Download resource packs of various servers!")
@@ -267,7 +303,10 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
     packs = {
         "Zeddy": "https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z",
         "GFL": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20Resource%20Pack.7z",
-        "Mapeadores": "https://www.notkoen.xyz/fastdl/public/packs/Mapeadores%20Resource%20Pack.7z"
+        "Mapeadores": "https://www.notkoen.xyz/fastdl/public/packs/Mapeadores%20Resource%20Pack.7z",
+        "ZombieDen": "https://www.notkoen.xyz/fastdl/public/packs/ZombieDen%20Resource%20Pack.7z",
+        "MoeUB": "https://www.notkoen.xyz/fastdl/public/packs/MoeUB%20Resource%20Pack.7z",
+        "ExG": "https://www.notkoen.xyz/fastdl/public/packs/ExG%20Resource%20Pack.7z"
     }
     if pack in packs:
         embed = disnake.Embed(
@@ -281,7 +320,7 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
 
 
 try:
-    print("Starting the bot...")
+    print("The bot is running!")
     Bot.run(config["token"])
 except discord.errors.LoginFailure:
     exit("TOKEN IS INVALID")
