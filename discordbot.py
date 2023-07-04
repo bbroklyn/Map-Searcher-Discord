@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.8
+            Bot by HeeChan  & Kassini    |       Version: 1.9
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -15,7 +15,7 @@ import datetime
 import requests
 import disnake
 import pandas as pd
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as BS
 import time
 from typing import Optional, List
 from disnake.ext import commands
@@ -34,7 +34,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`1.8`"
+Version = "`1.9`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
@@ -171,12 +171,13 @@ ITEMS_PER_PAGE = 20
 
 
 class Paginator(disnake.ui.View):
-    def __init__(self, items: List[str], link: List[str], name, choice, timeout: Optional[float] = None):
+    def __init__(self, items: List[str], link: List[str],  name, choice, size: List[str], timeout: Optional[float] = None):
         super().__init__(timeout=timeout)
         self.items = items
         self.link = link
         self.name = name
         self.choice = choice
+        self.size = size
         self.view = None
         self.current_page = 1
         self.message = None
@@ -194,7 +195,8 @@ class Paginator(disnake.ui.View):
         embed.add_field(name="", value="Click the map name to download it!")
         for i, item in enumerate(page_items):
             embed.add_field(name="",
-                            value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]}) [{self.choice}]",
+                            value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]})"
+                                  f" [{self.size[(page - 1) * 20 + i]} - {self.choice}]",
                             inline=False)
         self.next_page.label = f"Page {self.current_page}/{self.get_max_pages()}"
         return embed
@@ -250,30 +252,53 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     await inter.response.defer(ephemeral=True)
     name = mapname
     url = 0
-    urlreplace = 0
     if choice == "CS:GO":
         url = 'https://www.notkoen.xyz/fastdl/csgo/maps/'
-        urlreplace = "https://www.notkoen.xyz"
     elif choice == "CS:S":
         url = 'https://fastdl.unloze.com/css_ze/maps/'
-        urlreplace = "https://fastdl.unloze.com/css_ze/maps/"
 
     response = requests.get(url)
-    html = response.content
-    soup = BeautifulSoup(html, 'html.parser')
-    a_tags = soup.find_all('a')
+    html = response.text
+    soup = BS(html, 'html.parser')
+
     link = []
     namemap = []
-    for a_tag in a_tags:
-        href = a_tag['href']
-        if pd.Series(href.lower()).str.contains(name.lower()).any():
-            link.append(urlreplace + href)
-            namemap.append(urlreplace + href)
-        for i in range(len(namemap)):
-            namemap[i] = namemap[i].replace(url, '')
-            namemap[i] = namemap[i].replace('.bsp.bz2', '')
-            namemap[i] = namemap[i].replace('.bsp', '')
-    paginator = Paginator(namemap, link, name, choice)
+    size = []
+
+    if choice == "CS:GO":
+        table_rows = soup.find_all('tr')
+        for row in table_rows:
+            name_cell = row.find('td', class_='fb-n')
+            if name_cell:
+                name_text = name_cell.text.strip()
+                if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+                    link_cell = row.find('a')
+                    if link_cell:
+                        href = link_cell['href']
+                        link.append('https://www.notkoen.xyz' + href)
+                        namemap.append(name_text)
+                        size_cell = row.find('td', class_='fb-s')
+                        if size_cell:
+                            size_text = size_cell.text.strip()
+                            size_text = size_text.replace(' KB', '')
+                            size_mb = float(size_text) / 1048
+                            size.append(f"{size_mb:.2f} MB")
+    elif choice == "CS:S":
+        table_rows = soup.find_all('a')
+        for row in table_rows:
+            name_text = row.text.strip()
+            if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+                href = row['href']
+                link.append(url + href)
+                namemap.append(name_text)
+                size_text = row.next_sibling.strip()
+                size_value = size_text.split()[-1]
+                size_mb = float(size_value) / 1024 / 1024
+                size.append(f"{size_mb:.2f} MB")
+    for i in range(len(namemap)):
+        namemap[i] = namemap[i].replace('.bsp.bz2', '')
+        namemap[i] = namemap[i].replace('.bsp', '')
+    paginator = Paginator(namemap, link, name, choice, size)
     await paginator.start(inter)
 
 

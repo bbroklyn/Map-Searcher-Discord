@@ -3,3 +3,4 @@
 2.07.23->fixed an issue with /admin command.
 3.07.23->now it says if somebody trying to kill/restart the bot without permissions. fixed an issue with /helpme
 4.07.23->new command /about, uptime, changed /helpme to /help <commands>, more new server resource packs and some fixes.
+4.07.23 (2x)->now you can see .zip size in /maplink command.
