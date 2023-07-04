@@ -48,4 +48,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Future updates:
-- We are about to re-write some command, maybe add some new commands, make better code optimization and put map size after game detection in `/maplink`
+- Re-write some command;
+- Add new commands;
+- Make better code optimization;
+- Maybe add more choice in games besides **CS:GO** and **CS:S**
