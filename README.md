@@ -42,8 +42,8 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # How to use this bot?
 
-1. install all libraries with `pip install -r requirements.txt`
-2. Edit `config.json` file.
+1. install all libraries with `pip install -r requirements.txt`;
+2. Edit `config.json` file;
 3. Run the bot.
 
 
@@ -51,4 +51,4 @@ At the moment the bot is still being implemented to the end, being updated or we
 - Re-write some command;
 - Add new commands;
 - Make better code optimization;
-- Maybe add more choice in games besides **CS:GO** and **CS:S**
+- Maybe add more choice in games besides **CS:GO** and **CS:S**.
