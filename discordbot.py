@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 1.9
+            Bot by HeeChan  & Kassini    |       Version: 2.0
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -34,7 +34,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`1.9`"
+Version = "`2.0`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
@@ -245,7 +245,7 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-fastdllnik = commands.option_enum(["CS:GO", "CS:S"])
+fastdllnik = commands.option_enum(["CS:GO","CS2" , "CS:S"])
 
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdllnik, mapname: str):
@@ -254,6 +254,8 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     url = 0
     if choice == "CS:GO":
         url = 'https://www.notkoen.xyz/fastdl/csgo/maps/'
+    elif choice == "CS2":
+        url = 'https://www.notkoen.xyz/fastdl/cs2/maps/'
     elif choice == "CS:S":
         url = 'https://fastdl.unloze.com/css_ze/maps/'
 
@@ -265,7 +267,7 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     namemap = []
     size = []
 
-    if choice == "CS:GO":
+    if choice == "CS:GO" or "CS2":
         table_rows = soup.find_all('tr')
         for row in table_rows:
             name_cell = row.find('td', class_='fb-n')
@@ -298,6 +300,7 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     for i in range(len(namemap)):
         namemap[i] = namemap[i].replace('.bsp.bz2', '')
         namemap[i] = namemap[i].replace('.bsp', '')
+        namemap[i] = namemap[i].replace('.vpk', '')
     paginator = Paginator(namemap, link, name, choice, size)
     await paginator.start(inter)
 
