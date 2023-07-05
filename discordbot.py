@@ -245,7 +245,7 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-fastdllnik = commands.option_enum(["CS:GO","CS2" , "CS:S"])
+fastdllnik = commands.option_enum(["CS:GO","CS2", "CS:S"])
 
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdllnik, mapname: str):
@@ -267,7 +267,7 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     namemap = []
     size = []
 
-    if choice == "CS:GO" or "CS2":
+    if choice == "CS:GO" or choice == "CS2":
         table_rows = soup.find_all('tr')
         for row in table_rows:
             name_cell = row.find('td', class_='fb-n')
