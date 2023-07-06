@@ -325,7 +325,7 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
     await inter.edit_original_message(embed=embed)
 
 
-packvote = commands.option_enum(["Zeddy", "GFL", "Mapeadores", "ZombieDen", "MoeUB", "ExG"])
+packvote = commands.option_enum(["Zeddy", "GFL", "High Contract Zombies", "Mapeadores", "ZombieDen", "MoeUB", "ExG"])
 
 
 @Bot.slash_command(name="pack", description="Download resource packs of various servers!")
@@ -334,6 +334,7 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
     packs = {
         "Zeddy": "https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z",
         "GFL": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20Resource%20Pack.7z",
+        "High Contract Zombies": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20High%20Contrast%20Zombies.7z",
         "Mapeadores": "https://www.notkoen.xyz/fastdl/public/packs/Mapeadores%20Resource%20Pack.7z",
         "ZombieDen": "https://www.notkoen.xyz/fastdl/public/packs/ZombieDen%20Resource%20Pack.7z",
         "MoeUB": "https://www.notkoen.xyz/fastdl/public/packs/MoeUB%20Resource%20Pack.7z",
