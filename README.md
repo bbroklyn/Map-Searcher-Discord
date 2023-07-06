@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **2.0**
+Bot version : **2.1**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/helpme`.
 
@@ -15,7 +15,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/about` - About this bot.
 
-`/helpme <commands>` - Navigation help command.
+`/helpme <commands/utime>` - Navigation help command, some information
 
 `/fastdl` - Gives you the link to download the map.
 
@@ -51,4 +51,5 @@ At the moment the bot is still being implemented to the end, being updated or we
 - Re-write some command;
 - Add new commands;
 - Make better code optimization;
-- Maybe add more choice in games besides **CS:GO**, **CS:S** and **CS2**.
+- Maybe add more choice in games besides **CS:GO**, **CS:S** and **CS2**;
+- RAM usage display.

@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 2.0
+            Bot by HeeChan  & Kassini    |       Version: 2.1
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -34,7 +34,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`2.0`"
+Version = "`2.1`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
@@ -104,10 +104,11 @@ def setup(bot):
     bot.add_cog(UTC(bot))
 
 
-helpopt = commands.option_enum(["commands"])
+helpopt = commands.option_enum(["commands", "uptime"])
 
 @Bot.slash_command(name="help", description="Gives you every information about this bot/owners")
 async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
+    uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
     await inter.response.defer()
     help_things = {
         "commands": "\n **Bot Commands:**"
@@ -118,6 +119,8 @@ async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                     "\n </credits:1123702310837686292> - Credits to people, who helped in writing this bot"
                     "\n </help:1125453195750166538> - Navigation help command."
                     "\n </about:1125443661547712644> - About this bot.",
+        
+        "uptime":   "\n **Current** bot uptime: `" + uptime +"`"
     }
     if choice in help_things:
         embed = disnake.Embed(
