@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **2.1**
+Bot version : **2.2**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/helpme`.
 
@@ -15,7 +15,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/about` - About this bot.
 
-`/helpme <commands/utime>` - Navigation help command, some information
+`/helpme <commands/run usage>` - Navigation help command, some information
 
 `/fastdl` - Gives you the link to download the map.
 
@@ -23,7 +23,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/credits` - Credits to people, who helped in writing this bot.
 
-`/pack <Zeddy/GFL/Mapeadores/ZombieDen/MoeUB/ExG>` - Download resource packs of various servers.
+`/pack <Zeddy/GFL/High Contract Zombies/Mapeadores/ZombieDen/MoeUB/ExG>` - Download resource packs of various servers.
 
 # For Admins
 

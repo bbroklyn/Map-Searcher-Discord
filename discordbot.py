@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 2.1
+            Bot by HeeChan  & Kassini    |       Version: 2.2
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -12,6 +12,7 @@ import sys
 import os
 import datetime
 
+import psutil
 import requests
 import disnake
 import pandas as pd
@@ -34,7 +35,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`2.1`"
+Version = "`2.2`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
@@ -98,15 +99,16 @@ async def about(inter: disnake.ApplicationCommandInteraction):
     )
     embed.add_field(name="Version:", value=Version)
     embed.add_field(name="UpTime:", value="`"+uptime+"`")
+    embed.add_field(name = 'RAM:', value ="`"+str(psutil.virtual_memory().percent)+" %`")
     await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
 
 def setup(bot):
     bot.add_cog(UTC(bot))
 
 
-helpopt = commands.option_enum(["commands", "uptime"])
+helpopt = commands.option_enum(["commands", "run usage"])
 
-@Bot.slash_command(name="help", description="Gives you every information about this bot/owners")
+@Bot.slash_command(name="help", description="Navigation help command, some information")
 async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
     uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
     await inter.response.defer()
@@ -120,7 +122,8 @@ async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                     "\n </help:1125453195750166538> - Navigation help command."
                     "\n </about:1125443661547712644> - About this bot.",
         
-        "uptime":   "\n **Current** bot uptime: `" + uptime +"`"
+        "run usage":   "\n **Current** bot uptime: `" + uptime +"`"
+                 "\n **RAM** Usage: `" + str(psutil.virtual_memory().percent)+" %`"
     }
     if choice in help_things:
         embed = disnake.Embed(
