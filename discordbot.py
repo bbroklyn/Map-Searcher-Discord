@@ -22,7 +22,6 @@ from typing import Optional, List
 from disnake.ext import commands
 from disnake.ui import Button
 
-
 file = open("config.json", "r")
 config = json.load(file)
 
@@ -34,23 +33,26 @@ activity = disnake.Game(name="( ͡° ͜ʖ ͡°)")
 status = discord.Status.do_not_disturb
 
 global startTime
-startTime = time.time()
-Version = "`2.3`"
+startTime = time.time() # to prevent some issues
+Version = "`2.2`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
 @Bot.event
 async def on_slash_command_error(inter: disnake.ApplicationCommandInteraction, error: Exception) -> None:
     return
+
 
 @Bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         return
-    raise error 
-    
+    raise error
+
+
 @Bot.event
 async def on_ready():
     await Bot.change_presence(activity=activity, status=status)
@@ -65,42 +67,44 @@ async def on_ready():
     time.sleep(1.00)
     print("+ UpTime. [3/3]")
     time.sleep(1.00)
-    print("logged in as: "+str(Bot.user))
+    print("logged in as: " + str(Bot.user))
 
 
 @Bot.slash_command(name="about", description="Information about this bot.")
 async def about(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
-    uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+    uptime = str(datetime.timedelta(seconds=int(round(time.time() - startTime))))
     embed = disnake.Embed(
-            description="\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
-                       "\n You can contract us in discord, **heechan194** or **.kassini**"
-                       "\n"
-                       "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </help:1125453195750166538>."
-                       "\n"
-                       "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
-                       "\n",
-            color=0xFFFFFF
-        )
+        description="\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
+                    "\n You can contract us in discord, **heechan194** or **.kassini**"
+                    "\n"
+                    "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </help:1125453195750166538>."
+                    "\n"
+                    "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
+                    "\n",
+        color=0xFFFFFF
+    )
     embed.set_thumbnail(url="https://i.pinimg.com/564x/a6/ce/74/a6ce746599c3834a587af159d448978c.jpg")
     Gitbuttonheechan = Button(label="HeeChan", style=disnake.ButtonStyle.url,
-                        url="https://github.com/heechan194")
+                              url="https://github.com/heechan194")
     Gitbuttonkassini = Button(label="Kassini", style=disnake.ButtonStyle.url,
-                        url="https://github.com/KassiniGit")
+                              url="https://github.com/KassiniGit")
     Gitbutton = Button(label="Source Code", style=disnake.ButtonStyle.url,
-                        url="https://github.com/heechan194/Map-Searcher-Bot")
+                       url="https://github.com/heechan194/Map-Searcher-Bot")
     Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
-                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
+                          url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
 
     embed.set_author(
-    name="Map Searcher:",
-    url="https://github.com/heechan194/Map-Searcher-Bot",
-    icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
+        name="Map Searcher:",
+        url="https://github.com/heechan194/Map-Searcher-Bot",
+        icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
     )
     embed.add_field(name="Version:", value=Version)
-    embed.add_field(name="UpTime:", value="`"+uptime+"`")
-    embed.add_field(name = 'RAM:', value ="`"+str(psutil.virtual_memory().percent)+" %`")
-    await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
+    embed.add_field(name="UpTime:", value="`" + uptime + "`")
+    embed.add_field(name='RAM:', value="`" + str(psutil.virtual_memory().percent) + " %`")
+    await inter.edit_original_message(embed=embed,
+                                      components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
+
 
 def setup(bot):
     bot.add_cog(UTC(bot))
@@ -108,9 +112,10 @@ def setup(bot):
 
 helpopt = commands.option_enum(["commands", "run usage"])
 
+
 @Bot.slash_command(name="help", description="Navigation help command, some information")
 async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
-    uptime = str(datetime.timedelta(seconds=int(round(time.time()-startTime))))
+    uptime = str(datetime.timedelta(seconds=int(round(time.time() - startTime))))
     await inter.response.defer()
     help_things = {
         "commands": "\n **Bot Commands:**"
@@ -121,9 +126,10 @@ async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
                     "\n </credits:1123702310837686292> - Credits to people, who helped in writing this bot"
                     "\n </help:1125453195750166538> - Navigation help command."
                     "\n </about:1125443661547712644> - About this bot.",
-        
-        "run usage":   "\n **Current** bot uptime: `" + uptime +"`"
-                 "\n **RAM** Usage: `" + str(psutil.virtual_memory().percent)+" %`"
+
+        "run usage": "\n **Current** bot uptime: `" + uptime + "`"
+                                                               "\n **RAM** Usage: `" + str(
+            psutil.virtual_memory().percent) + " %`"
     }
     if choice in help_things:
         embed = disnake.Embed(
@@ -134,8 +140,8 @@ async def help(inter: disnake.ApplicationCommandInteraction, choice: helpopt):
         await inter.edit_original_message(embed=embed)
 
 
-
 adminoption = commands.option_enum(["shutdown", "restart"])
+
 
 @Bot.slash_command(name="admin", description="Admin commands.")
 async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoption):
@@ -145,16 +151,17 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
         if choice == "shutdown":
             await inter.edit_original_message(content="✔️ -> **Successfully shut down by** " + inter.author.mention)
             print("Bot has been killed by\n ", inter.author)
-            #raise exit("Bot has been killed by an Admin!")
-            raise SystemExit("Bot has been killed by\n", inter.author, "in",  inter.channel)
+            # raise exit("Bot has been killed by an Admin!")
+            raise SystemExit("Bot has been killed by\n", inter.author, "in", inter.channel)
         elif choice == "restart":
             await inter.edit_original_message(content="✔️ -> **The bot is restarting by** " + inter.author.mention)
-            print("Bot has been restarted by:", inter.author, "in" , inter.channel)
+            print("Bot has been restarted by:", inter.author, "in", inter.channel)
             python = sys.executable
-            os.execl(python, python, * sys.argv)
+            os.execl(python, python, *sys.argv)
     else:
         print(inter.author, "<- tried to use the admin command without permissions!")
         await inter.edit_original_message(content="❗ -> **You don't have permissions to use this command!**")
+
 
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map!")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
@@ -177,13 +184,15 @@ ITEMS_PER_PAGE = 20
 
 
 class Paginator(disnake.ui.View):
-    def __init__(self, items: List[str], link: List[str],  name, choice, size: List[str], timeout: Optional[float] = None):
+    def __init__(self, items: List[str], link: List[str], name, choice, size: List[str], date: List[str],
+                 timeout: Optional[float] = None):
         super().__init__(timeout=timeout)
         self.items = items
         self.link = link
         self.name = name
         self.choice = choice
         self.size = size
+        self.date = date
         self.view = None
         self.current_page = 1
         self.message = None
@@ -202,6 +211,7 @@ class Paginator(disnake.ui.View):
         for i, item in enumerate(page_items):
             embed.add_field(name="",
                             value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]})"
+                                  f" {self.date[(page - 1) * 20 + i]} "
                                   f" [{self.size[(page - 1) * 20 + i]} - {self.choice}]",
                             inline=False)
         self.next_page.label = f"Page {self.current_page}/{self.get_max_pages()}"
@@ -251,7 +261,8 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-fastdllnik = commands.option_enum(["CS:GO","CS2", "CS:S"])
+fastdllnik = commands.option_enum(["CS:GO", "CS2", "CS:S"])
+
 
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdllnik, mapname: str):
@@ -272,6 +283,7 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
     link = []
     namemap = []
     size = []
+    date = []
 
     if choice == "CS:GO" or choice == "CS2":
         table_rows = soup.find_all('tr')
@@ -291,6 +303,12 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
                             size_text = size_text.replace(' KB', '')
                             size_mb = float(size_text) / 1048
                             size.append(f"{size_mb:.2f} MB")
+                        date_cell = row.find('td', class_='fb-d')
+                        if date_cell:
+                            date_text = date_cell.text.strip()
+                            date_value = date_text.split()[0]
+                            date.append(date_value)
+
     elif choice == "CS:S":
         table_rows = soup.find_all('a')
         for row in table_rows:
@@ -301,13 +319,15 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
                 namemap.append(name_text)
                 size_text = row.next_sibling.strip()
                 size_value = size_text.split()[-1]
+                dateyear = size_text.split()[0]
                 size_mb = float(size_value) / 1024 / 1024
                 size.append(f"{size_mb:.2f} MB")
+                date.append(dateyear)
     for i in range(len(namemap)):
         namemap[i] = namemap[i].replace('.bsp.bz2', '')
         namemap[i] = namemap[i].replace('.bsp', '')
         namemap[i] = namemap[i].replace('.vpk', '')
-    paginator = Paginator(namemap, link, name, choice, size)
+    paginator = Paginator(namemap, link, name, choice, size, date)
     await paginator.start(inter)
 
 
