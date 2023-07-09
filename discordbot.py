@@ -34,7 +34,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`2.2`"
+Version = "`2.3`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
