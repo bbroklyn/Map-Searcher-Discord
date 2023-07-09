@@ -9,7 +9,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # Commands:
 
-- You can see every commands bellow or type `/`
+- You can see every commands bellow or type `/helpme`.
 
 # For everyone
 
@@ -32,7 +32,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # How to install this bot for your server?
 
-- I strongly **do not** recommend staring the bot yourself. This may not be the last code to be trusted, because this repository is used only in order not to lose the code.
+- I strongly **do not** recommend staring the bot yourself. This may not be the last code to be trusted, because this repository is used only in order not to lose the code!
 
 - Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20) button and then choose your server. The bot will work 24/7 as long as the hosting is working
 
