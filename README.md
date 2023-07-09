@@ -9,7 +9,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # Commands:
 
-- You can see every commands bellow or type `/`
+- You can see every commands bellow or type `/helpme`.
 
 # For everyone
 
