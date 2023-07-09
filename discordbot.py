@@ -159,7 +159,7 @@ async def admin(inter: disnake.ApplicationCommandInteraction, choice: adminoptio
             python = sys.executable
             os.execl(python, python, *sys.argv)
     else:
-        print(inter.author, "<- tried to use the admin command without permissions!")
+        print("[DEBUG]", inter.author, "<- tried to use the admin command without permissions!")
         await inter.edit_original_message(content="❗ -> **You don't have permissions to use this command!**")
 
 
@@ -257,7 +257,7 @@ class Paginator(disnake.ui.View):
             self.remove_item(self.last_page_button)
         embed = await self.show_page(self.current_page)
         self.message = await inter.edit_original_message(embed=embed, view=self)
-        self.view = self  # Добавляем ссылку на текущий объект view
+        self.view = self
         await inter.edit_original_response()
 
 
@@ -329,6 +329,7 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
         namemap[i] = namemap[i].replace('.vpk', '')
     paginator = Paginator(namemap, link, name, choice, size, date)
     await paginator.start(inter)
+    print("[DEBUG]", inter.author, "<- used /maplink")
 
 
 @Bot.slash_command(name="credits", description="Credits to people, who helped in writing this bot")
