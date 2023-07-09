@@ -6,3 +6,4 @@
 4.07.23 (2x)->now you can see .zip size in /maplink command.
 6.07.23->now bot can search for cs2 maps. uptime in /help uptime
 7.07.23->you can see memory usage now. /help run usage instead of /help uptime. + one new library in requirements.txt.
+9.09.23->changed memory showable thing. Now it counts in %.
