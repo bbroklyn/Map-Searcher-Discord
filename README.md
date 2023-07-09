@@ -15,7 +15,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/about` - About this bot. Shows uptime, RAM usage and etc.
 
-`/helpme <commands/run usage>` - Navigation help command, some information
+`/help <commands/run usage>` - Navigation help command, some information
 
 `/fastdl` - Gives you the link to download the map.
 
