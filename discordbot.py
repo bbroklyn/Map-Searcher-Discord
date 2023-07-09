@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 2.2
+            Bot by HeeChan  & Kassini    |       Version: 2.3
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -34,8 +34,8 @@ activity = disnake.Game(name="( ͡° ͜ʖ ͡°)")
 status = discord.Status.do_not_disturb
 
 global startTime
-startTime = time.time() # to prevent some issues
-Version = "`2.2`"
+startTime = time.time()
+Version = "`2.3`"
 
 class UTC(commands.Cog):
     def __init__(self, bot):
