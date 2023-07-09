@@ -28,13 +28,13 @@ config = json.load(file)
 intents = discord.Intents.all()
 intents.message_content = True
 
-Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-activity = disnake.Game(name="/about <- all information")
-status = discord.Status.do_not_disturb
-
 global startTime
 startTime = time.time() # to prevent some issues
 Version = "`2.3`"
+
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
+activity = disnake.Game(name="/about <- all information")
+status = discord.Status.do_not_disturb
 
 
 class UTC(commands.Cog):
