@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 2.3
+            Bot by HeeChan  & Kassini    |       Version: 2.4
             https://github.com/heechan194/Map-Searcher-Bot
                     https://github.com/heechan194
                     https://github.com/KassiniGit
@@ -22,19 +22,23 @@ from typing import Optional, List
 from disnake.ext import commands
 from disnake.ui import Button
 
+
 file = open("config.json", "r")
 config = json.load(file)
+
+changelogs=open("changelog.txt","r")
 
 intents = discord.Intents.all()
 intents.message_content = True
 
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-activity = disnake.Game(name="( ͡° ͜ʖ ͡°)")
+activity = disnake.Game(name="/about <- about me :)")
 status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`2.3`"
+Version = "`2.4`"
+
 
 class UTC(commands.Cog):
     def __init__(self, bot):
@@ -373,6 +377,17 @@ async def pack(inter: disnake.ApplicationCommandInteraction, pack: packvote):
         await inter.edit_original_message(embed=embed)
     else:
         await inter.edit_original_message("❗ -> **You wrote something wrong, please check it!**")
+
+
+@Bot.slash_command(name="changelog", description="Gives you the bot changelogs!")
+async def changelog(inter: disnake.ApplicationCommandInteraction):
+    await inter.response.defer()
+    changelog_embed = disnake.Embed(
+            title="All bot changes:",
+            description=changelogs.read(),
+            color=0xFFFFFF
+        )
+    await inter.edit_original_message(embed=changelog_embed)
 
 
 try:
