@@ -51,7 +51,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # Future updates:
 - Re-write some command;
-- Add new commands;
+- Add new commands (/changelog for example);
 - Make better code optimization;
 - Maybe add more choice in games besides **CS:GO**, **CS:S** and **CS2**;
 - RAM usage display.
