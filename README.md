@@ -7,13 +7,13 @@ a Python bot for Discord, the main function of which is to give people a link to
 At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**.
 
 
-# Commands
+# Commands:
 
 - You can see every commands bellow or type `/`
 
 # For everyone
 
-`/about` - About this bot.
+`/about` - About this bot. Shows uptime, RAM usage and etc.
 
 `/helpme <commands/run usage>` - Navigation help command, some information
 
