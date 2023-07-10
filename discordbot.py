@@ -27,6 +27,8 @@ file = open("config.json", "r")
 config = json.load(file)
 
 changelogs=open("changelog.txt","r")
+changelogs_content = changelogs.read()
+
 
 intents = discord.Intents.all()
 intents.message_content = True
@@ -384,10 +386,11 @@ async def changelog(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
     changelog_embed = disnake.Embed(
             title="All bot changes:",
-            description=changelogs.read(),
+            description=changelogs_content,
             color=0xFFFFFF
         )
     await inter.edit_original_message(embed=changelog_embed)
+    changelogs.close()
 
 
 try:
