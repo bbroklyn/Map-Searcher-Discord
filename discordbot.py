@@ -1,9 +1,9 @@
 """
-    The Bot, which gives you a download link from the map name
-            Bot by HeeChan  & Kassini    |       Version: 2.4
-            https://github.com/heechan194/Map-Searcher-Bot
-                    https://github.com/heechan194
-                    https://github.com/KassiniGit
+    The Bot, which gives you a download link from the map name and much more
+                Bot by HeeChan  & Kassini    |       Version: 2.5
+                https://github.com/heechan194/Map-Searcher-Bot
+                        https://github.com/heechan194
+                        https://github.com/KassiniGit
 
 """
 import discord
@@ -16,6 +16,7 @@ import psutil
 import requests
 import disnake
 import pandas as pd
+from rapidfuzz import fuzz
 from bs4 import BeautifulSoup as BS
 import time
 from typing import Optional, List
@@ -39,7 +40,7 @@ status = discord.Status.do_not_disturb
 
 global startTime
 startTime = time.time() # to prevent some issues
-Version = "`2.4`"
+Version = "`2.5`"
 
 
 class UTC(commands.Cog):
@@ -190,7 +191,7 @@ ITEMS_PER_PAGE = 20
 
 
 class Paginator(disnake.ui.View):
-    def __init__(self, items: List[str], link: List[str], name, choice, size: List[str], date: List[str],
+    def __init__(self, items: List[str], link: List[str], name, choice, size: List[str], date: List[str], search,
                  timeout: Optional[float] = None):
         super().__init__(timeout=timeout)
         self.items = items
@@ -199,6 +200,7 @@ class Paginator(disnake.ui.View):
         self.choice = choice
         self.size = size
         self.date = date
+        self.search = search
         self.view = None
         self.current_page = 1
         self.message = None
@@ -212,16 +214,23 @@ class Paginator(disnake.ui.View):
             return embed
 
         page_items = pages[page - 1]
-        embed = disnake.Embed(title=f"Input `{self.name}` has results: **{len(self.items)}**", color=0xFFFFFF)
-        embed.add_field(name="", value="Click the map name to download it!")
-        for i, item in enumerate(page_items):
-            embed.add_field(name="",
-                            value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]})"
-                                  f" {self.date[(page - 1) * 20 + i]} "
-                                  f" [{self.size[(page - 1) * 20 + i]} - {self.choice}]",
-                            inline=False)
-        self.next_page.label = f"Page {self.current_page}/{self.get_max_pages()}"
-        return embed
+        def createembed(embed):
+            for i, item in enumerate(page_items):
+                embed.add_field(name="",
+                                value=f"> ㅤ{(page - 1) * 20 + i + 1}. [{item}]({self.link[(page - 1) * 20 + i]}) "
+                                      f"[{self.date[(page - 1) * 20 + i]}, {self.size[(page - 1) * 20 + i]} - {self.choice}]",
+                                inline=False)
+            self.next_page.label = f"Page {self.current_page}/{self.get_max_pages()}"
+
+        if self.search == True:
+
+            embed = disnake.Embed(title=f"Input `{self.name}` has results: **{len(self.items)}**", color=0xFFFFFF)
+            createembed(embed)
+            return embed
+        else:
+            embed = disnake.Embed(title=f"Input `{self.name}` has no results.\n\nMaybe you mean:", color=0xFFA500)
+            createembed(embed)
+            return embed
 
     @disnake.ui.button(label="◀◀ First", style=disnake.ButtonStyle.grey)
     async def first_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
@@ -281,23 +290,21 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
         url = 'https://www.notkoen.xyz/fastdl/cs2/maps/'
     elif choice == "CS:S":
         url = 'https://fastdl.unloze.com/css_ze/maps/'
-
     response = requests.get(url)
     html = response.text
     soup = BS(html, 'html.parser')
-
     link = []
     namemap = []
     size = []
     date = []
-
+    search = True
     if choice == "CS:GO" or choice == "CS2":
         table_rows = soup.find_all('tr')
         for row in table_rows:
             name_cell = row.find('td', class_='fb-n')
             if name_cell:
                 name_text = name_cell.text.strip()
-                if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+                def process_row():
                     link_cell = row.find('a')
                     if link_cell:
                         href = link_cell['href']
@@ -314,12 +321,17 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
                             date_text = date_cell.text.strip()
                             date_value = date_text.split()[0]
                             date.append(date_value)
-
+                if pd.Series(name_text.lower()).str.contains(name.lower()).any() == 0:
+                    if fuzz.WRatio(name_text, name) >= 75:
+                        search = False
+                        process_row()
+                else:
+                    process_row()
     elif choice == "CS:S":
         table_rows = soup.find_all('a')
         for row in table_rows:
             name_text = row.text.strip()
-            if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+            def process_row():
                 href = row['href']
                 link.append(url + href)
                 namemap.append(name_text)
@@ -329,11 +341,17 @@ async def maplink(inter: disnake.ApplicationCommandInteraction, choice: fastdlln
                 size_mb = float(size_value) / 1024 / 1024
                 size.append(f"{size_mb:.2f} MB")
                 date.append(dateyear)
+            if pd.Series(name_text.lower()).str.contains(name.lower()).any() == 0:
+                if fuzz.WRatio(name_text, name) >= 75:
+                    search = False
+                    process_row()
+            else:
+                process_row()
     for i in range(len(namemap)):
         namemap[i] = namemap[i].replace('.bsp.bz2', '')
         namemap[i] = namemap[i].replace('.bsp', '')
         namemap[i] = namemap[i].replace('.vpk', '')
-    paginator = Paginator(namemap, link, name, choice, size, date)
+    paginator = Paginator(namemap, link, name, choice, size, date, search)
     await paginator.start(inter)
     print("[DEBUG]", inter.author, "<- used /maplink")
 

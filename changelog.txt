@@ -9,3 +9,4 @@
 9.07.23->changed memory showable thing. Now it counts in %.
 10.07.23->now shows map upload date on fastdl, some code changes and tracking some commands(print).
 10.07.23(2x)->added command /changelog.
+11.07.23->updated /maplink. Now it shows the possible maps you meant if the bot didnt find the maps you need. For example: If you write milten, you will be offered a map ze_moltentemple

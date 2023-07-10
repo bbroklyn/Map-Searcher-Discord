@@ -6,3 +6,4 @@ python-time
 typing
 disnake
 psutil
+rapidfuzz
