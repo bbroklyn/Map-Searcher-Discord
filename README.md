@@ -11,7 +11,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 - You can see every commands bellow or type `/help`.
 
-# For everyone
+# For everyone:
 
 `/about` - About this bot. Shows uptime, RAM usage and etc.
 
@@ -29,7 +29,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/servertrack` - Get all server information.
 
-# For Admins
+# For Admins:
 
 `/admin <shutdown/restart>` - Admin commands.
 
