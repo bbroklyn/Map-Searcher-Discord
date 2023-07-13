@@ -10,4 +10,5 @@
 10.07.23->now shows map upload date on fastdl, some code changes and tracking some commands(print).
 10.07.23(2x)->added command /changelog.
 11.07.23->updated /maplink. Now it shows the possible maps you meant if the bot didnt find the maps you need. For example: If you write milten, you will be offered a map ze_moltentemple.
-13.07.23-> added /servertack command. Shows server name, map, online and players on the server. Fixed some other commands.
+13.07.23->added /servertack command. Shows server name, map, online and players on the server. Fixed some other commands.
+14.07.23->fixed some code stuff, now if u want to add ur server to the tracker, just edit config.json and make pull request.

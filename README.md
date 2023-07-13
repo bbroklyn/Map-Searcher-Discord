@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **2.6**
+Bot version : **2.7**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/help`.
 
@@ -27,7 +27,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/changelog` - Bot changelogs.
 
-`/servertrack` - Get all server information.
+`/servertrack <server>` - Get all server information.
 
 # For Admins:
 
@@ -41,9 +41,14 @@ At the moment the bot is still being implemented to the end, being updated or we
 - Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20) button and then choose your server. The bot will work 24/7 as long as the hosting is working
 
 
-# Any issues?
-
-- Press an **issues** button here, if you want to submit an issue.
+# How to add new servers to the bot?
+  ```json 
+     {
+        "name":"Server Name",
+        "address":"IP ADRESS",
+        "port":27015
+     }
+```
 
 
 # How to use this bot?
@@ -51,6 +56,11 @@ At the moment the bot is still being implemented to the end, being updated or we
 1. install all libraries with `pip install -r requirements.txt`;
 2. Edit `config.json` file;
 3. Run the bot.
+
+
+# Any issues?
+
+- Press an **issues** button here, if you want to submit an issue.
 
 
 # Future updates:

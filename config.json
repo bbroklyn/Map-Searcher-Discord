@@ -1,13 +1,49 @@
 {
-  "token": "YOUR TOKEN",
-  "prefix": "/",
-  "url": "[koen's FastDL](https://www.notkoen.xyz/fastdl)",
-  "unloze_url": "[UNLOZE FastDL](https://fastdl.unloze.com/css_ze/maps/)",
-  "ZeddY^s": {"address": "103.62.48.12", "port": 27058},
-  "RSS": {"address": "125.129.91.62", "port": 27015},
-  "Mapeadores": {"address": "87.98.228.196", "port": 27040},
-  "GFL": {"address": "216.52.148.47", "port": 27015},
-  "NIDe": {"address": "149.202.65.122", "port": 27072},
-  "unloze": {"address": "ze.unloze.com", "port": 27015},
-  "GFL CSS": {"address": "92.119.148.14", "port": 27015}
-}
+   "token":"BOT TOKEN",
+   "prefix":"/",
+   "version":" 2.7",
+   "fastdl":"https://www.notkoen.xyz/fastdl",
+   "fastdl2":"https://fastdl.unloze.com/css_ze/maps/",
+   "trackers":[
+      {
+         "name":"ZeddY^s",
+         "address":"103.62.48.12",
+         "port":27058
+      },
+      {
+         "name":"RSS",
+         "address":"125.129.91.62",
+         "port":27015
+      },
+      {
+         "name":"Mapeadores",
+         "address":"87.98.228.196",
+         "port":27040
+      },
+      {
+         "name":"GFL",
+         "address":"216.52.148.47",
+         "port":27015
+      },
+      {
+         "name":"NIDe",
+         "address":"149.202.65.122",
+         "port":27072
+      },
+      {
+         "name":"unloze",
+         "address":"ze.unloze.com",
+         "port":27015
+      },
+      {
+         "name":"GFL CSS",
+         "address":"92.119.148.14",
+         "port":27015
+      },
+      {
+       "name":"ZeddY^s AWP",
+       "address":"103.62.48.4",
+       "port":27068
+      }
+   ]
+ }

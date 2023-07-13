@@ -23,13 +23,14 @@ from typing import Optional, List
 from disnake.ext import commands
 from disnake.ui import Button
 
+Version = "`2.6`"
+
+
 file = open("config.json", "r")
 config = json.load(file)
 
-
 changelogs=open("changelog.txt","r")
 changelogs_content = changelogs.read()
-
 
 intents = disnake.Intents(messages=True, guilds=True)
 
@@ -37,7 +38,6 @@ Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 activity = disnake.Game(name="/about <- about me :)")
 status = disnake.Status.do_not_disturb
 
-Version = "`2.6`"
 
 
 class UTC(commands.Cog):
@@ -78,6 +78,7 @@ async def about(inter: disnake.ApplicationCommandInteraction):
                     "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </help:1125453195750166538>."
                     "\n"
                     "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
+                    "\n If you want to add server, just do pull request and edit config.json."
                     "\n",
         color=0xFFFFFF
     )
@@ -90,16 +91,15 @@ async def about(inter: disnake.ApplicationCommandInteraction):
                        url="https://github.com/heechan194/Map-Searcher-Bot")
     Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
-
     embed.set_author(
         name="Map Searcher:",
         url="https://github.com/heechan194/Map-Searcher-Bot",
         icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
     )
+    embed.set_footer(text="*if something does not work, then refer to .kassini or heechan194.")
     embed.add_field(name="Version:", value=Version)
     embed.add_field(name="UpTime:", value="`" + uptime + "`")
     embed.add_field(name='RAM:', value="`" + str(psutil.virtual_memory().percent) + " %`")
-    embed.set_footer(text="*if something does not work, then refer to .kassini or heechan194.")
     await inter.edit_original_message(embed=embed,
                                       components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
 
@@ -124,48 +124,52 @@ class ServerPlayers(disnake.ui.View):
         await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
 
 
-servertr = commands.option_enum(["ZeddY^s", "RSS", "Mapeadores", "GFL", "NIDe", "UNLOZE", "GFL CSS"])
+# Получение списка серверов из файла JSON
+servers = [server['name'] for server in config['trackers']]
+# Определение параметра команды с использованием списка серверов
+servertr = commands.option_enum(servers)
 @Bot.slash_command(name="servertrack", description="Get all server information.")
-async def servertrack(inter: disnake.ApplicationCommandInteraction, server: servertr = commands.Param(name= "option", description="Choose a server.")):
+async def servertrack(inter: disnake.ApplicationCommandInteraction, server: servertr = commands.Param(name="option", description="Choose a server.")):
     await inter.response.defer()
-    if server in config:
-        server_address = config[server]["address"]
-        server_port = config[server]["port"]
-        server_info = a2s.info((server_address,server_port))
-        player_list = a2s.players((server_address,server_port))
-        playername = []
-        times = []
-        for player in player_list:
+    for server_info in config['trackers']:
+        if server_info['name'] == server:
+            server_address = server_info['address']
+            server_port = server_info['port']
+            server_info = a2s.info((server_address,server_port))
+            player_list = a2s.players((server_address,server_port))
 
-            player_duration = player.duration
-            minutes, seconds = divmod(player_duration, 60)
-            hours, minutes = divmod(minutes, 60)
+            playername = []
+            times = []
+            for player in player_list:
 
-            if hours < 1:
-                duration_formatted = f"{int(minutes):02d}:{int(seconds):02d}"
-            else:
-                duration_formatted = f"{int(hours)}:{int(minutes):02d}:{int(seconds):02d}"
-            playername.append(player.name)
-            times.append(duration_formatted)
-        server_name = server_info.server_name
-        curr_map = server_info.map_name.split('/')[-1]
-        players = str(server_info.player_count) + '/' + str(server_info.max_players)
-        embed = disnake.Embed(
-            title=f"**{server} tracker:**",
-            color=0xFFFFFF
-        )
-        connect = f"{server_address}:{server_port}"
-        connectlink =f"https://vauff.com/?ip={connect}"
-        embed.add_field(name="Server Name:", value=server_name, inline=False)
-        embed.add_field(name="Current Map:", value=curr_map, inline=False)
-        embed.add_field(name="Players:", value=players, inline=False)
-        embed.add_field(name="Connect:", value=f"[{connect}]({connectlink}) <- Press to join", inline=False)
-        serverplayers = ServerPlayers(playername, times, players)
-        await inter.followup.send(embed=embed, view=serverplayers)
+                player_duration = player.duration
+                minutes, seconds = divmod(player_duration, 60)
+                hours, minutes = divmod(minutes, 60)
+
+                if hours < 1:
+                    duration_formatted = f"{int(minutes):02d}:{int(seconds):02d}"
+                else:
+                    duration_formatted = f"{int(hours)}:{int(minutes):02d}:{int(seconds):02d}"
+                playername.append(player.name)
+                times.append(duration_formatted)
+            server_name = server_info.server_name
+            curr_map = server_info.map_name.split('/')[-1]
+            players = str(server_info.player_count) + '/' + str(server_info.max_players)
+            embed = disnake.Embed(
+                title=f"**{server} tracker:**",
+                color=0xFFFFFF
+            )
+            connect = f"{server_address}:{server_port}"
+            connectlink =f"https://vauff.com/?ip={connect}"
+            embed.add_field(name="Server Name:", value=server_name, inline=False)
+            embed.add_field(name="Current Map:", value=curr_map, inline=False)
+            embed.add_field(name="Players:", value=players, inline=False)
+            embed.add_field(name="Connect:", value=f"[{connect}]({connectlink}) <- Press to join", inline=False)
+            serverplayers = ServerPlayers(playername, times, players)
+            await inter.followup.send(embed=embed, view=serverplayers)
 
 
 helpopt = commands.option_enum(["commands", "run usage"])
-
 @Bot.slash_command(name="help", description="Navigation help command, some information.",)
 
 async def help(inter: disnake.ApplicationCommandInteraction, option: helpopt = commands.Param(name= "option", description="Choose an option.")):
@@ -196,8 +200,6 @@ async def help(inter: disnake.ApplicationCommandInteraction, option: helpopt = c
 
 
 adminoption = commands.option_enum(["shutdown", "restart"])
-
-
 @Bot.slash_command(name="admin", description="Admin commands.")
 async def admin(inter: disnake.ApplicationCommandInteraction, action: adminoption = commands.Param(name= "action", description="Select admin command actions.")):
     await inter.response.defer()
@@ -221,22 +223,21 @@ async def admin(inter: disnake.ApplicationCommandInteraction, action: adminoptio
 @Bot.slash_command(name="fastdl", description="Gives you the link to download the map.")
 async def fastdl(inter: disnake.ApplicationCommandInteraction):
     await inter.response.defer()
-    if config["url"] and config["unloze_url"] == "":
+    if config["fastdl"] and config["fastdl2"] == "":
         await inter.send("❗-> **An error has occurred, fastdl parameter in `config.json` is empty!**")
     else:
         fastdl_embed = disnake.Embed(
             title="FastDL",
             description="Below are links to all FastDL that the bot uses:"
                         "\n"
-                        "\n" + config["url"] +
-                        "\n" + config["unloze_url"],
+                        "\n[FASTDL 1](" + config["fastdl"]+")" +
+                        "\n[FASTDL 2](" + config["fastdl2"]+")",
             color=0xFFFFFF
         )
         await inter.edit_original_message(embed=fastdl_embed)
 
 
 ITEMS_PER_PAGE = 20
-
 
 class Paginator(disnake.ui.View):
     def __init__(self, items: List[str], link: List[str], name, game, size: List[str], date: List[str], search,
@@ -280,11 +281,11 @@ class Paginator(disnake.ui.View):
             createembed(embed)
             return embed
 
-    @disnake.ui.button(label="◀◀ First", style=disnake.ButtonStyle.grey)
+    @disnake.ui.button(label="◀◀", style=disnake.ButtonStyle.grey)
     async def first_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(1, interaction)
 
-    @disnake.ui.button(label="◀ Previous", style=disnake.ButtonStyle.grey)
+    @disnake.ui.button(label="◀", style=disnake.ButtonStyle.grey)
     async def previous_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(self.current_page - 1, interaction)
 
@@ -292,11 +293,11 @@ class Paginator(disnake.ui.View):
     async def next_page(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         return
 
-    @disnake.ui.button(label="Next ▶", style=disnake.ButtonStyle.grey)
+    @disnake.ui.button(label="▶", style=disnake.ButtonStyle.grey)
     async def next_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(self.current_page + 1, interaction)
 
-    @disnake.ui.button(label="Last ▶▶", style=disnake.ButtonStyle.grey)
+    @disnake.ui.button(label="▶▶", style=disnake.ButtonStyle.grey)
     async def last_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         await self.change_page(self.get_max_pages(), interaction)
 
@@ -326,7 +327,6 @@ class Paginator(disnake.ui.View):
 
 
 fastdllnik = commands.option_enum(["CS:GO", "CS2", "CS:S"])
-
 @Bot.slash_command(name="maplink", description="Gives you the link to download the map!")
 async def maplink(inter: disnake.ApplicationCommandInteraction, game: fastdllnik = commands.Param(name= "game", description="Enter the game name."), mapname: str = commands.Param(name= "mapname", description="Enter the map name")):
     await inter.response.defer(ephemeral=True)
@@ -437,8 +437,6 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
 
 
 packvote = commands.option_enum(["Zeddy", "GFL", "High Contract Zombies", "Mapeadores", "ZombieDen", "MoeUB", "ExG"])
-
-
 @Bot.slash_command(name="pack", description="Download resource packs of various servers.")
 async def pack(inter: disnake.ApplicationCommandInteraction,pack: packvote = commands.Param(name= "packs", description="Enter the pack name.")):
     await inter.response.defer()
