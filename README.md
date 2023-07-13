@@ -1,6 +1,6 @@
 # Map Searcher Bot for Discord
 
-Bot version : **2.5**
+Bot version : **2.6**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/help`.
 
@@ -27,6 +27,8 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/changelog` - Bot changelogs.
 
+`/servertrack` - Get all server information.
+
 # For Admins
 
 `/admin <shutdown/restart>` - Admin commands.
@@ -52,6 +54,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Future updates:
-- Re-write some command;
+- Re-write some commands;
 - Make better code optimization;
 - Maybe add more choice in games besides **CS:GO**, **CS:S** and **CS2**;
+- Change `/servertrack` a bit.
