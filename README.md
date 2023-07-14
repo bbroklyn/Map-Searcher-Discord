@@ -1,4 +1,4 @@
-[![changelogs](https://img.shields.io/badge/changelogs%20-76c22f)](https://github.com/heechan194/Map-Searcher-Bot/blob/main/changelog.txt) [![invite](https://img.shields.io/badge/Add_bot_to-Discord-green)](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot) 
+[![changelogs](https://img.shields.io/badge/changelogs%20-76c22f)](https://github.com/heechan194/Map-Searcher-Bot/blob/main/changelog.txt) [![invite](https://img.shields.io/badge/Add_bot_to-Discord-blue)](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot) 
 
 # Map Searcher Bot for Discord
 
