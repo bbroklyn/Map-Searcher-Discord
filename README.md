@@ -2,7 +2,7 @@
 
 # Map Searcher Bot for Discord
 
-Bot version : **2.7**
+Bot version : **2.8**
 
 a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/help`.
 
@@ -27,7 +27,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/pack <Zeddy/GFL/High Contract Zombies/Mapeadores/ZombieDen/MoeUB/ExG>` - Download resource packs of various servers.
 
-`/changelog` - Bot changelogs.
+`/changelog <DD.MM.YY>` - Bot changelogs.
 
 `/servertrack <server>` - Get all server information.
 
@@ -43,7 +43,7 @@ At the moment the bot is still being implemented to the end, being updated or we
 - Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20) button and then choose your server. The bot will work 24/7 as long as the hosting is working
 
 
-# How to add new servers to the bot?
+# How to add new servers/pack to the bot?
   ```json 
      {
         "name":"Server Name",
@@ -51,7 +51,12 @@ At the moment the bot is still being implemented to the end, being updated or we
         "port":27015
      }
 ```
-
+   ```json 
+    {
+       "pack":"pack name",
+       "link":"link to the pack"
+    }
+```
 
 # How to use this bot?
 

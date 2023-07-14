@@ -1,6 +1,6 @@
 """
     The Bot, which gives you a download link from the map name and much more
-                Bot by HeeChan  & Kassini    |       Version: 2.6
+                Bot by HeeChan  & Kassini    |       Version: 2.8
                 https://github.com/heechan194/Map-Searcher-Bot
                         https://github.com/heechan194
                         https://github.com/KassiniGit
@@ -10,6 +10,7 @@ import json
 import sys
 import os
 import datetime
+import re
 
 import a2s
 import psutil
@@ -23,11 +24,12 @@ from typing import Optional, List
 from disnake.ext import commands
 from disnake.ui import Button
 
-Version = "`2.6`"
 
 
 file = open("config.json", "r")
 config = json.load(file)
+changelogs_content = ""
+dates = re.findall(r"\d{1,2}\.\d{2}\.\d{2}", changelogs_content)
 
 changelogs=open("changelog.txt","r")
 changelogs_content = changelogs.read()
@@ -97,7 +99,7 @@ async def about(inter: disnake.ApplicationCommandInteraction):
         icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
     )
     embed.set_footer(text="*if something does not work, then refer to .kassini or heechan194.")
-    embed.add_field(name="Version:", value=Version)
+    embed.add_field(name="Version:", value=config["version"])
     embed.add_field(name="UpTime:", value="`" + uptime + "`")
     embed.add_field(name='RAM:', value="`" + str(psutil.virtual_memory().percent) + " %`")
     await inter.edit_original_message(embed=embed,
@@ -124,9 +126,7 @@ class ServerPlayers(disnake.ui.View):
         await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
 
 
-# Получение списка серверов из файла JSON
 servers = [server['name'] for server in config['trackers']]
-# Определение параметра команды с использованием списка серверов
 servertr = commands.option_enum(servers)
 @Bot.slash_command(name="servertrack", description="Get all server information.")
 async def servertrack(inter: disnake.ApplicationCommandInteraction, server: servertr = commands.Param(name="option", description="Choose a server.")):
@@ -161,6 +161,10 @@ async def servertrack(inter: disnake.ApplicationCommandInteraction, server: serv
             )
             connect = f"{server_address}:{server_port}"
             connectlink =f"https://vauff.com/?ip={connect}"
+            game_version = server_info.version
+            id_game = server_info.app_id
+            embed.add_field(name="Server version:", value=game_version, inline=True)
+            embed.add_field(name="Id game:", value=id_game, inline=True)
             embed.add_field(name="Server Name:", value=server_name, inline=False)
             embed.add_field(name="Current Map:", value=curr_map, inline=False)
             embed.add_field(name="Players:", value=players, inline=False)
@@ -435,49 +439,54 @@ async def credits(inter: disnake.ApplicationCommandInteraction):
     )
     await inter.edit_original_message(embed=embed)
 
+all_packs = [rpack['pack'] for rpack in config['packs']]
+pack_option = commands.option_enum(all_packs)
 
-packvote = commands.option_enum(["Zeddy", "GFL", "High Contract Zombies", "Mapeadores", "ZombieDen", "MoeUB", "ExG"])
 @Bot.slash_command(name="pack", description="Download resource packs of various servers.")
-async def pack(inter: disnake.ApplicationCommandInteraction,pack: packvote = commands.Param(name= "packs", description="Enter the pack name.")):
+async def pack(inter: disnake.ApplicationCommandInteraction, pack: pack_option = commands.Param(name="packs", description="Enter the pack name.")):
     await inter.response.defer()
-    packs = {
-        "Zeddy": "https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z",
-        "GFL": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20Resource%20Pack.7z",
-        "High Contract Zombies": "https://www.notkoen.xyz/fastdl/public/packs/GFL%20High%20Contrast%20Zombies.7z",
-        "Mapeadores": "https://www.notkoen.xyz/fastdl/public/packs/Mapeadores%20Resource%20Pack.7z",
-        "ZombieDen": "https://www.notkoen.xyz/fastdl/public/packs/ZombieDen%20Resource%20Pack.7z",
-        "MoeUB": "https://www.notkoen.xyz/fastdl/public/packs/MoeUB%20Resource%20Pack.7z",
-        "ExG": "https://www.notkoen.xyz/fastdl/public/packs/ExG%20Resource%20Pack.7z"
-    }
-    if pack in packs:
-        embed = disnake.Embed(
-            title="Click to download the Resource Pack!",
-            description=f"[{pack} Resource Pack]({packs[pack]})",
+    for pack_info in config['packs']:
+        if pack_info['pack'] == pack:
+            pack_name = pack_info['pack']
+            pack_link = pack_info['link']
+            embed = disnake.Embed(
+                title=f"{pack_name} resource pack, click to download.",
+                description=f"[-> {pack_name}]({pack_link})",
+                color=0xFFFFFF
+            )
+            await inter.edit_original_message(embed=embed)
+            return
+    await inter.edit_original_message(content="❗️-> An error has occurred, this pack does not exist!")
+
+@Bot.slash_command(name="changelog",description="Gives you the bot changelogs.")
+async def changelog(inter: disnake.ApplicationCommandInteraction,requested_date: str = commands.Param(name="date",description="Enter the date in DD.MM.YY format.")):
+    await inter.response.defer()
+    with open("changelog.txt", "r") as file:
+        changelogs_content = file.read()
+    changelog_cont = {}
+    dates = re.findall(r"\d{1,2}\.\d{2}\.\d{2}", changelogs_content)
+    for date in dates:
+        matches = re.findall(fr"{date}->(.+?);", changelogs_content)
+        changelog_cont[date] = matches
+    if requested_date in changelog_cont:
+        changelog_embed = disnake.Embed(
             color=0xFFFFFF
         )
-        await inter.edit_original_message(embed=embed)
+        changelog_embed.title = f"Bot changes for {requested_date}"
+        changelog_embed.description = "\n".join(changelog_cont[requested_date])
     else:
-        await inter.edit_original_message("❗-> **An error has occurred, this pack does not exist!**")
+        changelog_embed = disnake.Embed(
+            title="An error has occurred",
+            description="Invalid date! You can check everything here: [Press](https://github.com/heechan194/Map-Searcher-Bot/blob/main/changelog.txt)",
+            color=0xFF0000
+        )
 
-
-@Bot.slash_command(name="changelog", description="Gives you the bot changelogs.")
-async def changelog(inter: disnake.ApplicationCommandInteraction):
-    await inter.response.defer()
-    changelog_cont = {
-        "haslens": changelogs_content,
-        "empty": "\n ❗-> **An error has occurred, `changelog.txt` is empty!**"
-    }
-    changelog_embed = disnake.Embed(
-    title="All bot changes:",
-    description=changelog_cont["haslens"] if len(changelogs_content) > 0 else changelog_cont["empty"],
-    color=0xFFFFFF
-    )
     await inter.edit_original_message(embed=changelog_embed)
-changelogs.close()
+
 
 try:
     print("Validating the token...")
     Bot.run(config["token"])
     time.sleep(1)
 except:
-    exit("TOKEN IS INVALID")    
+    exit("TOKEN IS INVALID")

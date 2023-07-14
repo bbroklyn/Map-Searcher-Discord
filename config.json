@@ -1,7 +1,7 @@
 {
    "token":"BOT TOKEN",
    "prefix":"/",
-   "version":" 2.7",
+   "version":" 2.8",
    "fastdl":"https://www.notkoen.xyz/fastdl",
    "fastdl2":"https://fastdl.unloze.com/css_ze/maps/",
    "trackers":[
@@ -45,5 +45,35 @@
        "address":"103.62.48.4",
        "port":27068
       }
-   ]
+   ],
+   "packs":[
+    {
+       "pack":"Zeddy",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z"
+    },
+    {
+       "pack":"GFL",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/GFL%20Resource%20Pack.7z"
+    },
+    {
+       "pack":"High Contract Zombies",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/GFL%20High%20Contrast%20Zombies.7z"
+    },
+    {
+       "pack":"Mapeadores",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/Mapeadores%20Resource%20Pack.7z"
+    },
+    {
+       "pack":"ZombieDen",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/ZombieDen%20Resource%20Pack.7z"
+    },
+    {
+       "pack":"MoeUB",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/MoeUB%20Resource%20Pack.7z"
+    },
+    {
+       "pack":"ExG",
+       "link":"https://www.notkoen.xyz/fastdl/public/packs/ExG%20Resource%20Pack.7z"
+    }
+ ]
  }
