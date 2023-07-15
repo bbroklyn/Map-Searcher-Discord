@@ -48,7 +48,8 @@ At the moment the bot is still being implemented to the end, being updated or we
      {
         "name":"Server Name",
         "address":"IP ADRESS",
-        "port":27015
+        "port":27015,
+        "url":"URL"
      }
 ```
    ```json 
