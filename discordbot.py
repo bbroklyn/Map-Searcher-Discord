@@ -135,6 +135,7 @@ async def servertrack(inter: disnake.ApplicationCommandInteraction, server: serv
         if server_info['name'] == server:
             server_address = server_info['address']
             server_port = server_info['port']
+            url = server_info['url']
             server_info = a2s.info((server_address,server_port))
             player_list = a2s.players((server_address,server_port))
 
@@ -166,7 +167,32 @@ async def servertrack(inter: disnake.ApplicationCommandInteraction, server: serv
             embed.add_field(name="Server version:", value=game_version, inline=True)
             embed.add_field(name="Id game:", value=id_game, inline=True)
             embed.add_field(name="Server Name:", value=server_name, inline=False)
-            embed.add_field(name="Current Map:", value=curr_map, inline=False)
+            link = 0  # Инициализация переменной link
+            response = requests.get(url)
+            html = response.text
+            soup = BS(html, 'html.parser')
+            if server in ["ZeddY^s", "RSS", "Mapeadores", "GFL"]:
+                table_rows = soup.find_all('tr')
+                for row in table_rows:
+                    name_cell = row.find('td', class_='fb-n')
+                    if name_cell:
+                        name_text = name_cell.text.strip()
+                        if pd.Series(name_text.lower()).str.contains(curr_map.lower()).any():
+                            link_cell = row.find('a')
+                            if link_cell:
+                                href = link_cell['href']
+                                link = 'https://www.notkoen.xyz' + href
+            elif server in ["NIDe", "unloze", "GFL CSS"]:
+                table_rows = soup.find_all('a')
+                for row in table_rows:
+                    name_text = row.text.strip()
+                    if pd.Series(name_text.lower()).str.contains(curr_map.lower()).any():
+                        href = row['href']
+                        link = url + href
+            if link == 0:
+                embed.add_field(name="Current Map:", value=curr_map, inline=False)
+            else:
+                embed.add_field(name="Current Map:", value=f"[{curr_map}]({link})", inline=False)
             embed.add_field(name="Players:", value=players, inline=False)
             embed.add_field(name="Connect:", value=f"[{connect}]({connectlink}) <- Press to join", inline=False)
             serverplayers = ServerPlayers(playername, times, players)
