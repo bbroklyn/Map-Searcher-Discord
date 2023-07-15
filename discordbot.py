@@ -30,6 +30,8 @@ file = open("config.json", "r")
 config = json.load(file)
 changelogs_content = ""
 dates = re.findall(r"\d{1,2}\.\d{2}\.\d{2}", changelogs_content)
+buildtime = datetime.date.today()
+pversion = ".".join(map(str, sys.version_info[:3]))
 
 changelogs=open("changelog.txt","r")
 changelogs_content = changelogs.read()
@@ -80,8 +82,9 @@ async def about(inter: disnake.ApplicationCommandInteraction):
                     "\n A **Python** bot for **Discord**, the main function of which is to give people a link to the map that they entered in the search with the </maplink:1123674597494100119> command. If you want to see all bot commands, you can type </help:1125453195750166538>."
                     "\n"
                     "\n At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**."
-                    "\n If you want to add server, just do pull request and edit config.json."
-                    "\n",
+                    "\n If you want to add **server/pack**, just do pull request and edit config.json."
+                    "\n"
+                    "*if something does not work, then refer to .kassini or heechan194.",
         color=0xFFFFFF
     )
     embed.set_thumbnail(url="https://i.pinimg.com/564x/a6/ce/74/a6ce746599c3834a587af159d448978c.jpg")
@@ -91,19 +94,19 @@ async def about(inter: disnake.ApplicationCommandInteraction):
                               url="https://github.com/KassiniGit")
     Gitbutton = Button(label="Source Code", style=disnake.ButtonStyle.url,
                        url="https://github.com/heechan194/Map-Searcher-Bot")
-    Invitebutton = Button(label="Bot invite", style=disnake.ButtonStyle.url,
+    Invitebutton = Button(label="Invite Link", style=disnake.ButtonStyle.url,
                           url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
     embed.set_author(
         name="Map Searcher:",
         url="https://github.com/heechan194/Map-Searcher-Bot",
         icon_url="https://e7.pngegg.com/pngimages/94/403/png-clipart-beautiful-black-arrow-black-arrow-pretty-arrow.png",
     )
-    embed.set_footer(text="*if something does not work, then refer to .kassini or heechan194.")
     embed.add_field(name="Version:", value=config["version"])
-    embed.add_field(name="UpTime:", value="`" + uptime + "`")
-    embed.add_field(name='RAM:', value="`" + str(psutil.virtual_memory().percent) + " %`")
-    await inter.edit_original_message(embed=embed,
-                                      components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
+    embed.add_field(name="Up Time:", value=f"`{uptime}`")
+    embed.add_field(name='RAM:', value=f"`{psutil.virtual_memory().percent} %`")
+    embed.add_field(name='Build Date:', value=f"`{buildtime}`")
+    embed.add_field(name='Python Version:', value=f"`{pversion}`")
+    await inter.edit_original_message(embed=embed, components=[Gitbuttonheechan, Gitbuttonkassini, Gitbutton, Invitebutton])
 
 
 def setup(bot):
@@ -123,7 +126,10 @@ class ServerPlayers(disnake.ui.View):
         for player, time in zip(self.players_list, self.time):
             player_names_str += f"{player} -> {time}\n"
 
-        await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
+        if len(player_names_str) == 0:
+            await inter.response.send_message(f"**Players {self.players}**:\n```No one is playing on the server at the moment!```", ephemeral=True)
+        else:
+            await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
 
 
 servers = [server['name'] for server in config['trackers']]
@@ -216,9 +222,8 @@ async def help(inter: disnake.ApplicationCommandInteraction, option: helpopt = c
                     "\n </about:1125443661547712644> - About this bot."
                     "\n </servertrack:1128787852612882432> - Get all server information.",
 
-        "run usage": "\n **Current** bot uptime: `" + uptime + "`"
-                                                               "\n **RAM** Usage: `" + str(
-            psutil.virtual_memory().percent) + " %`"
+        "run usage": "\n **Current** bot Up Time: `" + uptime + "`"
+                     "\n **RAM** Usage: `" + str( psutil.virtual_memory().percent) + " %`"
     }
     if option in help_things:
         embed = disnake.Embed(
