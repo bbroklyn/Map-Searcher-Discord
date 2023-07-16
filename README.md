@@ -4,7 +4,7 @@
 
 Bot version : **2.9**
 
-a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/maplink` command. If you want to see all bot commands, you can type `/help`.
+a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/mlink` command. If you want to see all bot commands, you can type `/help`.
 
 At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**.
 
