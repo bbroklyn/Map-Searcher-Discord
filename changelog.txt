@@ -12,4 +12,4 @@
 11.07.23->updated /maplink. Now it shows the possible maps you meant if the bot didnt find the maps you need. For example: If you write milten, you will be offered a map ze_moltentemple;
 13.07.23->added /servertack command. Shows server name, map, online and players on the server. Fixed some other commands;
 14.07.23->fixed some code stuff, now if u want to add ur server/pack to the tracker, just edit config.json and make pull request. Improved changelog command;
-17.07.23->Big migration, huge update, +logger, code fix and some command changes.
+17.07.23->Big migration, huge update, +logger, code fix and some command changes;
