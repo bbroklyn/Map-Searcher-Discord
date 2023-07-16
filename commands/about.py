@@ -1,5 +1,5 @@
 import json
-
+import sys
 import datetime
 
 from logger import write_log
@@ -10,7 +10,8 @@ from disnake.ui import Button
 
 file = open("config.json", "r")
 config = json.load(file)
-
+buildtime = datetime.date.today()
+pversion = ".".join(map(str, sys.version_info[:3]))
 
 async def about(inter, start_Time):
     await inter.response.defer()
@@ -39,7 +40,9 @@ async def about(inter, start_Time):
     )
     embed.set_footer(text="*if something does not work, then refer to .kassini or heechan194.")
     embed.add_field(name="Version:", value=config["version"])
-    embed.add_field(name="UpTime:", value="`" + uptime + "`")
-    embed.add_field(name='RAM:', value="`" + str(psutil.virtual_memory().percent) + " %`")
+    embed.add_field(name="Up Time:", value=f"`{uptime}`")
+    embed.add_field(name='RAM:', value=f"`{psutil.virtual_memory().percent} %`")
+    embed.add_field(name='Build Date:', value=f"`{buildtime}`")
+    embed.add_field(name='Python Version:', value=f"`{pversion}`")
     write_log("used /about.", inter.author)
     await inter.edit_original_message(embed=embed, components=[git_button_heechan, git_button_kassini, git_button, invite_button])
