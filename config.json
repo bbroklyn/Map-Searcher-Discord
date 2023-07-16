@@ -56,7 +56,7 @@
             }
          ],
       "packs":
-            [
+      [
             {
                "pack":"Zeddy",
                "link":"https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z"
@@ -85,5 +85,5 @@
                "pack":"ExG",
                "link":"https://www.notkoen.xyz/fastdl/public/packs/ExG%20Resource%20Pack.7z"
             }
-         ]
+      ]
  }
