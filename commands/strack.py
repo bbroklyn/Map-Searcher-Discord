@@ -58,20 +58,20 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                 times.append(duration_formatted)
             server_name = server_info.server_name
             curr_map = server_info.map_name.split('/')[-1]
-            players = str(server_info.player_count) + '/' + str(server_info.max_players)
+            players = "`"+str(server_info.player_count) + '/' + str(server_info.max_players)+"`"
             embed = disnake.Embed(
                 title=f"**{server} tracker:**",
                 color=0xFFFFFF
             )
             connect = f"{server_address}:{server_port}"
             connect_link =f"https://vauff.com/?ip={connect}"
-            game_version = server_info.version
-            id_game = server_info.app_id
+            game_version = "`"+server_info.version+"`"
+            id_game = "`%s`" % server_info.app_id
             link = 0
             response = requests.get(url)
             html = response.text
             soup = BS(html, 'html.parser')
-            if server in ["ZeddY^s", "RSS", "Mapeadores", "GFLCLAN CS:GO"]:
+            if server in ["ZeddY^s", "RSS", "Mapeadores", "GFL CS:GO"]:
                 table_rows = soup.find_all('tr')
                 for row in table_rows:
                     name_cell = row.find('td', class_='fb-n')
@@ -82,7 +82,7 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                             if link_cell:
                                 href = link_cell['href']
                                 link = 'https://www.notkoen.xyz' + href
-            elif server in ["NIDe", "UNLOZE", "GFLCLAN CS:S"]:
+            elif server in ["NIDE.GG", "UNLOZE", "GFL CS:S"]:
                 table_rows = soup.find_all('a')
                 for row in table_rows:
                     name_text = row.text.strip()
@@ -90,15 +90,15 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                         href = row['href']
                         link = url + href
             embed.add_field(name="Server version:", value=game_version, inline=True)
-            embed.add_field(name="Id game:", value=id_game, inline=True)
-            embed.add_field(name="Server Name:", value=server_name, inline=False)
+            embed.add_field(name="Game ID:", value=id_game, inline=True)
+            embed.add_field(name="Server Name:", value="`"+server_name+"`", inline=False)
             if link == 0:
-                embed.add_field(name="Current Map:", value=curr_map, inline=False)
+                embed.add_field(name="Current Map:", value="`"+curr_map+"`", inline=False)
             else:
                 embed.add_field(name="Current Map:", value=f"[{curr_map}]({link})", inline=False)
 
-            embed.add_field(name="Players:", value=players, inline=False)
-            embed.add_field(name="Connect:", value=f"[{connect}]({connect_link}) <- Press to join", inline=False)
+            embed.add_field(name="Players:", value=players, inline=True)
+            embed.add_field(name="Connect:", value=f"[{connect}]({connect_link})", inline=True)
             server_players = ServerPlayers(player_name, times, players)
             write_log(f"used /strack {server}", inter.author)
             await inter.followup.send(embed=embed, view=server_players)
