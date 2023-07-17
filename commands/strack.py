@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 
 import a2s
 import requests
@@ -11,9 +12,9 @@ from logger import write_log
 
 file = open("config.json", "r")
 config = json.load(file)
+time_now = datetime.now().strftime("%H:%M:%S")
 
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-
 
 class ServerPlayers(disnake.ui.View):
     def __init__(self, players: List[str], times: List[str], player, timeout: Optional[float] = None):
@@ -28,11 +29,10 @@ class ServerPlayers(disnake.ui.View):
         player_names_str = ""
         for player, time in zip(self.players_list, self.time):
             player_names_str += f"{player} -> {time}\n"
-
         if len(player_names_str) == 0:
             await inter.response.send_message(f"**Players {self.players}**:\n```No one is playing on the server at the moment!```", ephemeral=True)
         else:
-            await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
+            await inter.response.send_message(f"**Players {self.players} at `{time_now}`**:\n```{player_names_str}```", ephemeral=True)
 
 
 async def server_track(inter: disnake.ApplicationCommandInteraction, server):
@@ -44,6 +44,7 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
             url = server_info['url']
             server_info = a2s.info((server_address,server_port))
             player_list = a2s.players((server_address,server_port))
+            platform = server_info.platform
             player_name = []
             times = []
             for player in player_list:
@@ -60,13 +61,13 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
             curr_map = server_info.map_name.split('/')[-1]
             players = "`"+str(server_info.player_count) + '/' + str(server_info.max_players)+"`"
             embed = disnake.Embed(
-                title=f"**{server} tracker:**",
+                title=f"**{server} tracker at `{time_now}`**",
                 color=0xFFFFFF
             )
             connect = f"{server_address}:{server_port}"
             connect_link =f"https://vauff.com/?ip={connect}"
-            game_version = "`"+server_info.version+"`"
-            id_game = "`%s`" % server_info.app_id
+            game_version = server_info.version
+            id_game = server_info.app_id
             link = 0
             response = requests.get(url)
             html = response.text
@@ -90,10 +91,11 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                         href = row['href']
                         link = url + href
             embed.add_field(name="Server version:", value=game_version, inline=True)
+            embed.add_field(name="Platform(W/L/M):", value=platform, inline=True)
             embed.add_field(name="Game ID:", value=id_game, inline=True)
-            embed.add_field(name="Server Name:", value="`"+server_name+"`", inline=False)
+            embed.add_field(name="Server Name:", value=server_name, inline=False)
             if link == 0:
-                embed.add_field(name="Current Map:", value="`"+curr_map+"`", inline=False)
+                embed.add_field(name="Current Map:", value=curr_map, inline=False)
             else:
                 embed.add_field(name="Current Map:", value=f"[{curr_map}]({link})", inline=False)
 
