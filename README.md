@@ -80,6 +80,9 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # Credits
 **NiceShot** - Helped us with some things.
+
 **koen** - We are using his [FastDL](https://www.notkoen.xyz/fastdl/).
+
 **Killik** - Linux server.
+
 **UNLOZE** - For FastDL.
