@@ -1,64 +1,72 @@
 {
-   "token":"BOT TOKEN",
+   "token":"BOT_TOKEN",
    "prefix":"/",
-   "version":" 2.9",
+   "version":"`3.0`",
    "fastdl":"https://www.notkoen.xyz/fastdl",
    "fastdl2":"https://fastdl.unloze.com/css_ze/maps/",         
       "trackers":
       [
             {
+               "ID":"730",
                "name":"ZeddY^s",
                "address":"103.62.48.12",
                "port":27058,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
             },
             {
+               "ID":"730",               
                "name":"RSS",
                "address":"125.129.91.62",
                "port":27015,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
             },
             {
+               "ID":"730",  
                "name":"Mapeadores",
                "address":"87.98.228.196",
                "port":27040,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
             },
             {
-               "name":"GFL",
+               "ID":"730",
+               "name":"GFL CS:GO",
                "address":"216.52.148.47",
                "port":27015,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
             },
             {
-               "name":"NIDe",
+               "ID":"240",
+               "name":"NIDE.GG",
                "address":"149.202.65.122",
                "port":27072,
                "url":"https://fastdl.unloze.com/css_ze/maps/"
             },
             {
-               "name":"unloze",
+               "ID":"240",
+               "name":"UNLOZE",
                "address":"ze.unloze.com",
                "port":27015,
                "url":"https://fastdl.unloze.com/css_ze/maps/"
             },
             {
-               "name":"GFL CSS",
+               "ID":"240",  
+               "name":"GFL CS:S",
                "address":"92.119.148.14",
                "port":27015,
                "url":"https://fastdl.unloze.com/css_ze/maps/"
             },
             {
+               "ID":"730",
                "name":"ZeddY^s AWP",
                "address":"103.62.48.4",
                "port":27068,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
             }
          ],
-      "packs":
+      "ResourcePack":
       [
             {
-               "pack":"Zeddy",
+               "pack":"ZeddY's",
                "link":"https://www.notkoen.xyz/fastdl/public/packs/Zeddy%20Resource%20Pack.7z"
             },
             {
@@ -86,4 +94,4 @@
                "link":"https://www.notkoen.xyz/fastdl/public/packs/ExG%20Resource%20Pack.7z"
             }
       ]
- }
+}

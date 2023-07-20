@@ -2,9 +2,9 @@
 
 # Map Searcher Bot for Discord
 
-Bot version : **2.9**
+Bot version : **3.0**
 
-a Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/mlink` command. If you want to see all bot commands, you can type `/help`.
+A Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/mlink` command. If you want to see all bot commands, you can type `/help`.
 
 At the moment the bot is still being implemented to the end, being updated or we are trying to add some new features. If you find any bugs, want to suggest new features or any optimization, you can write in the discord: **heechan194** or **.kassini**.
 
@@ -23,15 +23,15 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 `/mlink <CS:S/CS:GO/CS2> <mapname>` - Gives you the link to download the map.
 
-`/credits` - Credits to people, who helped in writing this bot.
-
 `/pack <Zeddy/GFL/High Contract Zombies/Mapeadores/ZombieDen/MoeUB/ExG>` - Download resource packs of various servers.
 
 `/changelog <DD.MM.YY>` - Bot changelogs.
 
 `/strack <server>` - Get all server information.
 
-# For Admins:
+`/csite <URL>` - Checks if the site is running. Also gives information about him.
+
+# For Owners:
 
 `/admin <shutdown/restart>` - Admin commands.
 
@@ -46,16 +46,18 @@ At the moment the bot is still being implemented to the end, being updated or we
 # How to add new servers/pack to the bot?
   ```json 
      {
+        
+        "ID":"730 OR 240 (CSGO - 730, CSS - 240)",
         "name":"Server Name",
         "address":"IP ADRESS",
-        "port":27015,
-        "url":"URL"
+        "port":SERVER_PORT,
+        "url":"FASTDL-URL"
      }
 ```
    ```json 
     {
        "pack":"pack name",
-       "link":"link to the pack"
+       "link":"download-link"
     }
 ```
 
@@ -72,8 +74,12 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Future updates:
-- Re-write some commands;
 - Make better code optimization;
-- Maybe add more choice in games besides **CS:GO**, **CS:S** and **CS2**;
-- Change `/strack` a bit;
-- Re-write bot to another language maybe.
+- Add more choice in games besides **CS:GO**, **CS:S** and **CS2**;
+
+
+# Credits
+**NiceShot** - Helped us with some things.
+**koen** - We are using his [FastDL](https://www.notkoen.xyz/fastdl/).
+**Killik** - Linux server.
+**UNLOZE** - For FastDL.

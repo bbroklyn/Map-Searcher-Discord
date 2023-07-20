@@ -10,15 +10,16 @@ config = json.load(file)
 async def pack(inter: disnake.ApplicationCommandInteraction,
                pack_select):
     await inter.response.defer()
-    for pack_info in config['packs']:
+    for pack_info in config['ResourcePack']:
         if pack_info['pack'] == pack_select:
             pack_name = pack_info['pack']
             pack_link = pack_info['link']
             embed = disnake.Embed(
-                title=f"{pack_name} resource pack, click to download.",
-                description=f"[-> {pack_name}]({pack_link})",
+                title=f"**{pack_name}** resource pack, click to download.",
+                description=f"Your link: [{pack_name}]({pack_link})",
                 color=0xFFFFFF
             )
+            embed.set_footer(text="* If the link is outdated or you have a newer version - contact the owners of this bot")
             write_log(f"used /pack {pack_name}", inter.author)  
             await inter.edit_original_message(embed=embed)
             return  

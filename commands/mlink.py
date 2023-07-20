@@ -7,7 +7,7 @@ from typing import Optional, List
 from logger import write_log
 
 ITEMS_PER_PAGE = 20
-
+command_author_id = None
 
 class Paginator(disnake.ui.View):
     def __init__(self, items: List[str], link: List[str], name, game, size: List[str], date: List[str], search,
@@ -53,10 +53,16 @@ class Paginator(disnake.ui.View):
 
     @disnake.ui.button(label="◀◀", style=disnake.ButtonStyle.grey)
     async def first_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        global command_author_id
+        if interaction.user.id != command_author_id:
+            return
         await self.change_page(1, interaction)
 
     @disnake.ui.button(label="◀", style=disnake.ButtonStyle.grey)
     async def previous_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        global command_author_id
+        if interaction.user.id != command_author_id:
+            return
         await self.change_page(self.current_page - 1, interaction)
 
     @disnake.ui.button(label="Page 1/1", style=disnake.ButtonStyle.blurple, disabled=True)
@@ -65,10 +71,16 @@ class Paginator(disnake.ui.View):
 
     @disnake.ui.button(label="▶", style=disnake.ButtonStyle.grey)
     async def next_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        global command_author_id
+        if interaction.user.id != command_author_id:
+            return
         await self.change_page(self.current_page + 1, interaction)
 
     @disnake.ui.button(label="▶▶", style=disnake.ButtonStyle.grey)
     async def last_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
+        global command_author_id
+        if interaction.user.id != command_author_id:
+            return
         await self.change_page(self.get_max_pages(), interaction)
 
     async def change_page(self, page: int, interaction: disnake.Interaction):
@@ -96,7 +108,9 @@ class Paginator(disnake.ui.View):
 
 
 async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name):
-    await inter.response.defer(ephemeral=True)
+    await inter.response.defer()
+    global command_author_id
+    command_author_id = inter.author.id
     name = map_name
     url = 0
     if game == "CS:GO":
@@ -113,66 +127,12 @@ async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name)
     size = []
     date = []
     search = True
-    if game == "CS:GO" or game == "CS2":
-        table_rows = soup.find_all('tr')
-        found_match = False
-        def process_row(row):
-            link_cell = row.find('a')
-            if link_cell:
-                href = link_cell['href']
-                link.append('https://www.notkoen.xyz' + href)
-                name_map.append(name_text)
-                size_cell = row.find('td', class_='fb-s')
-                if size_cell:
-                    size_text = size_cell.text.strip()
-                    size_text = size_text.replace(' KB', '')
-                    size_mb = float(size_text) / 1048
-                    size.append(f"{size_mb:.2f} MB")
-                date_cell = row.find('td', class_='fb-d')
-                if date_cell:
-                    date_text = date_cell.text.strip()
-                    date_value = date_text.split()[0]
-                    date.append(date_value)
-        for row in table_rows:
-            name_cell = row.find('td', class_='fb-n')
-            if name_cell:
-                name_text = name_cell.text.strip()
-                if pd.Series(name_text.lower()).str.contains(name.lower()).any():
-                    process_row(row)
-                    found_match = True
-        if not found_match:
-            for row in table_rows:
-                name_cell = row.find('td', class_='fb-n')
-                if name_cell:
-                    name_text = name_cell.text.strip()
-                    if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
-                        search = False
-                        process_row(row)
-    elif game == "CS:S":
-        def process_row(row):
-            href = row['href']
-            link.append(url + href)
-            name_map.append(name_text)
-            size_text = row.next_sibling.strip()
-            size_value = size_text.split()[-1]
-            date_year = size_text.split()[0]
-            size_mb = float(size_value) / 1024 / 1024
-            size.append(f"{size_mb:.2f} MB")
-            date.append(date_year)
 
-        table_rows = soup.find_all('a')
-        found_match = False
-        for row in table_rows:
-            name_text = row.text.strip()
-            if pd.Series(name_text.lower()).str.contains(name.lower()).any():
-                process_row(row)
-                found_match = True
-        if not found_match:
-            for row in table_rows:
-                name_text = row.text.strip()
-                if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
-                    search = False
-                    process_row(row)
+    if game == "CS:GO" or game == "CS2":
+        parser_link_csgo_cs2(soup, search, name, link, name_map, size, date)
+    elif game == "CS:S":
+        parser_link_css(soup, search, url, name, link, name_map, size, date)
+        
     for i in range(len(name_map)):
         name_map[i] = name_map[i].replace('.bsp.bz2', '')
         name_map[i] = name_map[i].replace('.bsp', '')
@@ -180,3 +140,68 @@ async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name)
     paginator = Paginator(name_map, link, name, game, size, date, search)
     write_log("used /mlink.", inter.author)
     await paginator.start(inter)
+
+def parser_link_csgo_cs2(soup, search, name, link: List[str], name_map: List[str], size: List[str], date: List[str]):
+    table_rows = soup.find_all('tr')
+    search = search
+    found_match = False 
+    for row in table_rows:
+        name_cell = row.find('td', class_='fb-n')
+        if name_cell:
+            name_text = name_cell.text.strip()
+            if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+                append_link_csgo_cs2(row, name_text, link, name_map, size, date)
+                found_match = True
+    if not found_match:
+        for row in table_rows:
+            name_cell = row.find('td', class_='fb-n')
+            if name_cell:
+                name_text = name_cell.text.strip()
+                if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
+                    search = False
+                    append_link_csgo_cs2(row, name_text, link, name_map, size, date)
+
+def append_link_csgo_cs2(row, name_text, link: List[str], name_map: List[str], size: List[str], date: List[str]):
+    link_cell = row.find('a')
+    if link_cell:
+        href = link_cell['href']
+        link.append('https://www.notkoen.xyz' + href)
+        name_map.append(name_text)
+        size_cell = row.find('td', class_='fb-s')
+        if size_cell:
+            size_text = size_cell.text.strip()
+            size_text = size_text.replace(' KB', '')
+            size_mb = float(size_text) / 1048
+            size.append(f"{size_mb:.2f} MB")
+        date_cell = row.find('td', class_='fb-d')
+        if date_cell:
+            date_text = date_cell.text.strip()
+            date_value = date_text.split()[0]
+            date.append(date_value)
+
+def parser_link_css(soup, search, url, name, link: List[str], name_map: List[str], size: List[str], date: List[str]):
+    search = search
+    table_rows = soup.find_all('a')
+    found_match = False
+    for row in table_rows:
+        name_text = row.text.strip()
+        if pd.Series(name_text.lower()).str.contains(name.lower()).any():
+            append_link_css(row, url, name_text, link, name_map, size, date)
+            found_match = True
+    if not found_match:
+        for row in table_rows:
+            name_text = row.text.strip()
+            if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
+                search = False
+                append_link_css(row, url, name_text, link, name_map, size, date)  
+
+def append_link_css(row, url, name_text, link: List[str], name_map: List[str], size: List[str], date: List[str]):
+    href = row['href']
+    link.append(url + href)
+    name_map.append(name_text)
+    size_text = row.next_sibling.strip()
+    size_value = size_text.split()[-1]
+    date_year = size_text.split()[0]
+    size_mb = float(size_value) / 1024 / 1024
+    size.append(f"{size_mb:.2f} MB")
+    date.append(date_year)
