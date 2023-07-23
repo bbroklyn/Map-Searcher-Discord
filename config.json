@@ -61,7 +61,14 @@
                "address":"103.62.48.4",
                "port":27068,
                "url":"https://www.notkoen.xyz/fastdl/csgo/maps/"
-            }
+            },
+            {
+               "ID":"240",
+               "name":"Undying Rangers",
+               "address":"37.230.162.133",
+               "port":27015,
+               "url":"https://fastdl.unloze.com/css_ze/maps/"
+            }   
          ],
       "ResourcePack":
       [

@@ -129,10 +129,9 @@ async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name)
     search = True
 
     if game == "CS:GO" or game == "CS2":
-        parser_link_csgo_cs2(soup, search, name, link, name_map, size, date)
+        search = parser_link_csgo_cs2(soup, search, name, link, name_map, size, date)
     elif game == "CS:S":
-        parser_link_css(soup, search, url, name, link, name_map, size, date)
-        
+        search = parser_link_css(soup, search, url, name, link, name_map, size, date)
     for i in range(len(name_map)):
         name_map[i] = name_map[i].replace('.bsp.bz2', '')
         name_map[i] = name_map[i].replace('.bsp', '')
@@ -143,7 +142,6 @@ async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name)
 
 def parser_link_csgo_cs2(soup, search, name, link: List[str], name_map: List[str], size: List[str], date: List[str]):
     table_rows = soup.find_all('tr')
-    search = search
     found_match = False 
     for row in table_rows:
         name_cell = row.find('td', class_='fb-n')
@@ -160,6 +158,7 @@ def parser_link_csgo_cs2(soup, search, name, link: List[str], name_map: List[str
                 if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
                     search = False
                     append_link_csgo_cs2(row, name_text, link, name_map, size, date)
+    return search
 
 def append_link_csgo_cs2(row, name_text, link: List[str], name_map: List[str], size: List[str], date: List[str]):
     link_cell = row.find('a')
@@ -180,7 +179,6 @@ def append_link_csgo_cs2(row, name_text, link: List[str], name_map: List[str], s
             date.append(date_value)
 
 def parser_link_css(soup, search, url, name, link: List[str], name_map: List[str], size: List[str], date: List[str]):
-    search = search
     table_rows = soup.find_all('a')
     found_match = False
     for row in table_rows:
@@ -194,6 +192,7 @@ def parser_link_css(soup, search, url, name, link: List[str], name_map: List[str
             if fuzz.WRatio(name_text.lower(), name.lower()) >= 75:
                 search = False
                 append_link_css(row, url, name_text, link, name_map, size, date)  
+    return search
 
 def append_link_css(row, url, name_text, link: List[str], name_map: List[str], size: List[str], date: List[str]):
     href = row['href']
