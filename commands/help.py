@@ -4,6 +4,15 @@ import psutil
 import disnake
 import time
 from logger import write_log
+from disnake.ext import commands
+import json
+
+file = open("config.json", "r")
+config = json.load(file)
+
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
+global start_Time
+start_Time = time.time()
 
 class Paginator(disnake.ui.View):
     def __init__(self, commands: list, items_per_page: int = 5):
@@ -68,8 +77,33 @@ class Paginator(disnake.ui.View):
         if self.current_page < self.total_pages:
             self.current_page = self.current_page + 1
             await self.change_page(interaction)
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️")
+    async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
+        await inter.response.defer()
+        global command_author_id
+        if inter.user.id != command_author_id:
+            return
+        await inter.delete_original_response()   
 
-async def help(inter: disnake.ApplicationCommandInteraction, option, start_Time, command_descriptions):
+
+
+command_descriptions = {
+    "mlink": "Gives you the link to download the map from name.",
+    "fastdl": "Link to FastDL.",
+    "admin": "Admin commands. Can restart/shutdown bot.",
+    "help": "Navigation help command.",
+    "about": "About this bot.",
+    "strack": "Get all server information.",
+    "csite": "Checks website and all information about him."
+}
+help_opt = commands.option_enum(["commands", "run usage"])
+@Bot.slash_command(name="help",
+                  description="Navigation help command, some information.")
+
+async def help_command(inter: disnake.ApplicationCommandInteraction,
+                       option: help_opt = commands.Param(name="option",
+                                                         description="Choose an option.")):
+
     uptime = str(datetime.timedelta(seconds=int(round(time.time() - start_Time))))
     await inter.response.defer()
     global command_author_id

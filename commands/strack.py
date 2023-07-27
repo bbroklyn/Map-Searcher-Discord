@@ -9,6 +9,7 @@ import pandas as pd
 from bs4 import BeautifulSoup as BS
 from typing import Optional, List
 from disnake.ext import commands
+from disnake.ui import Button
 from logger import write_log
 
 file = open("config.json", "r")
@@ -19,12 +20,13 @@ command_author_id = None
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 
 class ServerPlayers(disnake.ui.View):
-    def __init__(self, players: List[str], times: List[str], player, timeout: Optional[float] = None):
+    def __init__(self, players: List[str], times: List[str], player, player_score: List[str], timeout: Optional[float] = None):
         super().__init__(timeout=timeout)
         self.players_list = players
         self.time = times
         self.players = player
         self.message = None
+        self.score = player_score
 
     @disnake.ui.button(label="List of players", style=disnake.ButtonStyle.grey)
     async def button_callback(self, button: disnake.ui.Button, inter: disnake.Interaction):
@@ -32,15 +34,28 @@ class ServerPlayers(disnake.ui.View):
         if inter.user.id != command_author_id:
             return
         player_names_str = ""
-        for player, time in zip(self.players_list, self.time):
-            player_names_str += f"{player} -> {time}\n"
+        for player, time, score in zip(self.players_list, self.time, self.score):
+            player_names_str += f"{player} | {time} | {score}\n"
         if len(player_names_str) == 0:
-            await inter.response.send_message(f"**Players {self.players}**:\n```No one is playing on the server at the moment!```", ephemeral=True)
+            await inter.response.send_message(f"**Players ATM {self.players}**:\n```No one is playing on the server ATM!```", ephemeral=True)
         else:
-            await inter.response.send_message(f"**Players {self.players}**:\n```{player_names_str}```", ephemeral=True)
+            await inter.response.send_message(f"**Players ATM {self.players}**:\n```Nickname | Time | Score\n\n{player_names_str}```", ephemeral=True)
+    
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️")
+    async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
+        await inter.response.defer()
+        global command_author_id
+        if inter.user.id != command_author_id:
+            return        
+        await inter.delete_original_response()
 
-
-async def server_track(inter: disnake.ApplicationCommandInteraction, server):
+servers = [server['name'] for server in config['trackers']]
+server_tr = commands.option_enum(servers)
+@Bot.slash_command(name="strack", 
+                   description="Get all server information.")
+async def server_track_command(inter: disnake.ApplicationCommandInteraction,
+                               server: server_tr = commands.Param(name="option",
+                                                                  description="Choose a server.")):
     await inter.response.defer()
     global command_author_id
     command_author_id = inter.author.id
@@ -50,11 +65,13 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                 server_address = server_info['address']
                 server_port = server_info['port']
                 url = server_info['url']
+                gameid = server_info['ID']
                 server_info = a2s.info((server_address,server_port))
                 player_list = a2s.players((server_address,server_port))
                 platform = server_info.platform
                 player_name = []
                 times = []
+                player_score = []
                 for player in player_list:
                     player_duration = player.duration
                     minutes, seconds = divmod(player_duration, 60)
@@ -65,11 +82,12 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                         duration_formatted = f"{int(hours)}:{int(minutes):02d}:{int(seconds):02d}"
                     player_name.append(player.name)
                     times.append(duration_formatted)
+                    player_score.append(player.score)
                 server_name = server_info.server_name
                 curr_map = server_info.map_name.split('/')[-1]
                 players = "`"+str(server_info.player_count) + '/' + str(server_info.max_players)+"`"
                 embed = disnake.Embed(
-                    title=f"**{server} tracker**",
+                    title=f"**{server} tracker:**",
                     color=0xFFFFFF
                 )
                 embed.timestamp = datetime.datetime.now()
@@ -81,7 +99,7 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                 response = requests.get(url)
                 html = response.text
                 soup = BS(html, 'html.parser')
-                if server == "730":
+                if gameid == "730":
                     table_rows = soup.find_all('tr')
                     for row in table_rows:
                         name_cell = row.find('td', class_='fb-n')
@@ -92,7 +110,7 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                                 if link_cell:
                                     href = link_cell['href']
                                     link = 'https://www.notkoen.xyz' + href
-                elif server == "240":
+                elif gameid == "240":
                     table_rows = soup.find_all('a')
                     for row in table_rows:
                         name_text = row.text.strip()
@@ -104,13 +122,13 @@ async def server_track(inter: disnake.ApplicationCommandInteraction, server):
                 embed.add_field(name="Game ID:", value=id_game, inline=True)
                 embed.add_field(name="Server Name:", value=server_name, inline=False)
                 if link == 0:
-                    embed.add_field(name="Current Map:", value=curr_map, inline=False)
+                    embed.add_field(name="Current Map: ", value=curr_map + "\n**[Unable to find map on FastDL]**", inline=False)
                 else:
                     embed.add_field(name="Current Map:", value=f"[{curr_map}]({link})", inline=False)
 
                 embed.add_field(name="Players:", value=players, inline=True)
                 embed.add_field(name="Connect:", value=f"[{connect}]({connect_link})", inline=True)
-                server_players = ServerPlayers(player_name, times, players)
+                server_players = ServerPlayers(player_name, times, players, player_score)
                 write_log(f"used /strack {server}", inter.author)
                 await inter.followup.send(embed=embed, view=server_players)
     except socket.timeout as e:

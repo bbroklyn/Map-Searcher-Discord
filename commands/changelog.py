@@ -1,15 +1,22 @@
 import re
-
+import json
 import disnake
 from logger import write_log
+from disnake.ext import commands
 
 changelogs_content = ""
 dates = re.findall(r"\d{1,2}\.\d{2}\.\d{2}", changelogs_content)
+file = open("config.json", "r")
+config = json.load(file)
 
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 intents = disnake.Intents(messages=True, guilds=True)
 
-    
-async def changelog(inter: disnake.ApplicationCommandInteraction, requested_date):
+@Bot.slash_command(name="changelog", 
+                   description="Gives you the bot changelogs.")
+async def changelogs(inter: disnake.ApplicationCommandInteraction,
+                    requested_date: str = commands.Param(name="date",
+                                                         description="Enter the date in DD.MM.YY format.")):    
     await inter.response.defer()
     with open("changelog.txt", "r") as file:
         change_logs_content = file.read()

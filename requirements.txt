@@ -1,10 +1,8 @@
 requests
 bs4
 pandas
-python-time
 typing
 disnake
 psutil
 rapidfuzz
 python-a2s
-logger

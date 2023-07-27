@@ -1,3 +1,4 @@
+import json
 import requests
 import disnake
 import pandas as pd
@@ -5,7 +6,13 @@ from rapidfuzz import fuzz
 from bs4 import BeautifulSoup as BS
 from typing import Optional, List
 from logger import write_log
+from disnake.ext import commands, tasks
 
+
+file = open("config.json", "r")
+config = json.load(file)
+
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 ITEMS_PER_PAGE = 20
 command_author_id = None
 
@@ -82,6 +89,13 @@ class Paginator(disnake.ui.View):
         if interaction.user.id != command_author_id:
             return
         await self.change_page(self.get_max_pages(), interaction)
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️")
+    async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
+        global command_author_id
+        if inter.user.id != command_author_id:
+            return        
+        await inter.response.defer()
+        await inter.delete_original_response()       
 
     async def change_page(self, page: int, interaction: disnake.Interaction):
         await interaction.response.defer()
@@ -107,7 +121,14 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-async def map_link(inter: disnake.ApplicationCommandInteraction, game, map_name):
+games = commands.option_enum(["CS:GO", "CS2", "CS:S"]) 
+@Bot.slash_command(name="mlink", 
+                   description="Gives you the link to download the map!")
+async def map_link_command(inter: disnake.ApplicationCommandInteraction,
+                  game: games = commands.Param(name="game",
+                                                      description="Enter the game name."),
+                  map_name: str = commands.Param(name="mapname",
+                                                 description="Enter the map name")):
     await inter.response.defer()
     global command_author_id
     command_author_id = inter.author.id

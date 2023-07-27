@@ -2,7 +2,7 @@
 
 # Map Searcher Bot for Discord
 
-Bot version : **3.0**
+Bot version : **3.1**
 
 A Python bot for Discord, the main function of which is to give people a link to the map that they entered in the search with the `/mlink` command. If you want to see all bot commands, you can type `/help`.
 
@@ -38,9 +38,9 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 # How to install this bot for your server?
 
-- I strongly **do not** recommend staring the bot yourself. This may not be the last code to be trusted, because this repository is used only in order not to lose the code!
+- I strongly **do not** recommend starting the bot yourself, because this may not be the last code to be trusted, because this repository is used only in order not to lose the code!
 
-- Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20) button and then choose your server. The bot will work 24/7 as long as the hosting is working
+- Click to [this](https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20) button and then choose your server. The bot will work 24/7 as long as the hosting is working.
 
 
 # How to add new servers/pack to the bot?
@@ -79,10 +79,8 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Credits
-**NiceShot** - Helped us with some things.
+**NiceShot** - Coding help.
 
-**koen** - We are using his [FastDL](https://www.notkoen.xyz/fastdl/).
+**koen** - [FastDL](https://www.notkoen.xyz/fastdl/).
 
 **Killik** - Linux server.
-
-**UNLOZE** - For FastDL.

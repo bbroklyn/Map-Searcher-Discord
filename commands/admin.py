@@ -1,11 +1,23 @@
+import json
 import sys
 import os
 
 import disnake
 from logger import write_log
+from disnake.ext import commands
 
+file = open("config.json", "r")
+config = json.load(file)
 
-async def admin(inter: disnake.ApplicationCommandInteraction, action):
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
+
+admin_option = commands.option_enum(["shutdown", "restart"])
+@Bot.slash_command(name="admin", 
+                   description="Admin commands.")
+async def admin_command(inter: disnake.ApplicationCommandInteraction,
+                action: admin_option = commands.Param(name="action",
+                                                      description="Select admin command actions.")):
+
     await inter.response.defer()
     allowed_users = [1041292965483651102, 390221466689339392]
     if inter.user.id in allowed_users:

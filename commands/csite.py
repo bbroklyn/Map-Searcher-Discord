@@ -1,17 +1,36 @@
 import requests
 import json
 
-
 import disnake
 from bs4 import BeautifulSoup
 from logger import write_log
+from disnake.ext import commands
 
 file = open("config.json", "r")
 config = json.load(file)
-Bot = disnake.Client()
+command_author_id = None
 
-async def check_website(inter: disnake.ApplicationCommandInteraction, website):
+class ResourcePackView(disnake.ui.View):
+    def __init__(self):
+        super().__init__()
+
+    @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️")
+    async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
+        await inter.response.defer()
+        global command_author_id
+        if inter.user.id != command_author_id:
+            return        
+        await inter.delete_original_response()
+
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
+@Bot.slash_command(name="csite", 
+                   description="Checks if the site is running. Also gives information about him.")
+async def check_website(inter: disnake.ApplicationCommandInteraction,
+                    website: str = commands.Param(name="website",
+                                                         description="Enter the website URL.")):
     await inter.response.defer()
+    global command_author_id
+    command_author_id = inter.author.id    
     if not website.startswith("https://"):
         website = "https://" + website
     await inter.send(f"Getting information about `{website}`")
@@ -44,20 +63,20 @@ async def check_website(inter: disnake.ApplicationCommandInteraction, website):
         embed.add_field(name="Content Type:", value=content_type, inline=False)
         embed.add_field(name="Content Length:", value=content_length, inline=False)
         embed.add_field(name="Server:", value=server, inline=False)
-        await inter.edit_original_message(embed=embed)
+        await inter.edit_original_message(embed=embed, view=ResourcePackView())
         
         
     except requests.exceptions.Timeout:
         error_message = "Timeout occurred while getting information."
         embed = disnake.Embed(title="Error:", description=error_message, color=disnake.Color.red())
-        await inter.edit_original_message(embed=embed)
+        await inter.edit_original_message(embed=embed, view=ResourcePackView())
     except requests.exceptions.RequestException as e:
         error_message = f"{str(e)}"
         embed = disnake.Embed(title="An error occurred:", color=disnake.Color.red())
         embed.set_footer(text=error_message)
-        await inter.edit_original_message(embed=embed)
+        await inter.edit_original_message(embed=embed, view=ResourcePackView())
     except UnicodeError as e:
         error_message = f"UnicodeError: {e}"
         embed = disnake.Embed(title="Error log:", color=disnake.Color.red())
         embed.set_footer(text=error_message)
-        await inter.edit_original_message(embed=embed)
+        await inter.edit_original_message(embed=embed, view=ResourcePackView())

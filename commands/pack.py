@@ -2,13 +2,21 @@ import json
 
 import disnake
 from logger import write_log
+from disnake.ext import commands
 
 file = open("config.json", "r")
 config = json.load(file)
+intents = disnake.Intents(messages=True, guilds=True)
+Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
 
+all_packs = [r_pack['pack'] for r_pack in config['ResourcePack']]
+pack_option = commands.option_enum(all_packs)
 
-async def pack(inter: disnake.ApplicationCommandInteraction,
-               pack_select):
+@Bot.slash_command(name="pack", 
+                   description="Download resource packs of various servers.")
+async def pack_command(inter: disnake.ApplicationCommandInteraction,
+                       pack_select: pack_option = commands.Param(name="packs",
+                                                                 description="Enter the pack name.")):
     await inter.response.defer()
     for pack_info in config['ResourcePack']:
         if pack_info['pack'] == pack_select:
