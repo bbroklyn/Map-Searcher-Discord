@@ -5,20 +5,19 @@ from logger import write_log
 from disnake.ext import commands
 
 changelogs_content = ""
-dates = re.findall(r"\d{1,2}\.\d{2}\.\d{2}", changelogs_content)
+
 file = open("config.json", "r")
 config = json.load(file)
 
 Bot = commands.Bot(config['prefix'], intents=disnake.Intents.all())
-intents = disnake.Intents(messages=True, guilds=True)
 
 @Bot.slash_command(name="changelog", 
                    description="Gives you the bot changelogs.")
 async def changelogs(inter: disnake.ApplicationCommandInteraction,
                     requested_date: str = commands.Param(name="date",
-                                                         description="Enter the date in DD.MM.YY format.")):    
+                                                        description="Enter the date in DD.MM.YY format.")):
     await inter.response.defer()
-    with open("changelog.txt", "r") as file:
+    with open("changelog.txt") as file:
         change_logs_content = file.read()
     changelog_cont = {
         date: re.findall(fr"{date}->(.+?);", change_logs_content)

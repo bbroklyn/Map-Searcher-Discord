@@ -89,6 +89,7 @@ class Paginator(disnake.ui.View):
         if interaction.user.id != command_author_id:
             return
         await self.change_page(self.get_max_pages(), interaction)
+        
     @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️")
     async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):
         global command_author_id
@@ -121,11 +122,14 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-games = commands.option_enum(["CS:GO", "CS2", "CS:S"]) 
+
+
+
+fast_dl_link = commands.option_enum(["CS:GO", "CS2", "CS:S"]) 
 @Bot.slash_command(name="mlink", 
                    description="Gives you the link to download the map!")
 async def map_link_command(inter: disnake.ApplicationCommandInteraction,
-                  game: games = commands.Param(name="game",
+                  game: fast_dl_link = commands.Param(name="game",
                                                       description="Enter the game name."),
                   map_name: str = commands.Param(name="mapname",
                                                  description="Enter the map name")):

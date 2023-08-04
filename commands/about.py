@@ -26,10 +26,10 @@ class ResourcePackView(disnake.ui.View):
     @disnake.ui.button(label="Kassini", style=disnake.ButtonStyle.url, url="https://github.com/KassiniGit")
     async def Kassini():
         return
-    @disnake.ui.button(label="HeeChan", style=disnake.ButtonStyle.url, url="https://github.com/heechan194")
-    async def HeeChan():
+    @disnake.ui.button(label="broklyn", style=disnake.ButtonStyle.url, url="https://github.com/br0klyn")
+    async def broklyn():
         return
-    @disnake.ui.button(label="Code", style=disnake.ButtonStyle.url, url="https://github.com/heechan194/Map-Searcher-Bot")
+    @disnake.ui.button(label="Code", style=disnake.ButtonStyle.url, url="https://github.com/br0klyn/Map-Searcher-Bot")
     async def Source():
         return
     @disnake.ui.button(label="Invite Link", style=disnake.ButtonStyle.url, url="https://discord.com/api/oauth2/authorize?client_id=1122605455194193931&permissions=277025396736&scope=applications.commands%20bot")
@@ -51,7 +51,7 @@ async def about_command(inter: disnake.ApplicationCommandInteraction):
     command_author_id = inter.author.id
     uptime = str(datetime.timedelta(seconds=int(round(time.time() - start_Time))))
     embed = disnake.Embed(
-        description="\n Bot owners: [HeeChan](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
+        description="\n Bot owners: [broklyn](https://steamcommunity.com/id/6561198326716239/) & [Kassini](https://steamcommunity.com/id/I_God_Sigma/)"
                     "\n"
                     "\n Map Searcher is a **multifunctional** bot written in **Python** using the disnake. If you want to see commands, you can type </help:1125453195750166538>."
                     "\n",
@@ -61,11 +61,11 @@ async def about_command(inter: disnake.ApplicationCommandInteraction):
 
     embed.set_author(
         name="Map Searcher",
-        url="https://github.com/heechan194/Map-Searcher-Bot"
+        url="https://github.com/br0klyn/Map-Searcher-Bot"
     )
     ram: float = psutil.virtual_memory().used/1048/1048
     ram_formatted = round(ram)
-    embed.add_field(name="Version", value=config["version"])
+    embed.add_field(name="Bot Version", value=config["version"])
     embed.add_field(name="Up Time", value=f"`{uptime}`")
     embed.add_field(name='RAM', value=f"`{ram_formatted} MB`")
     embed.add_field(name='Build Date', value=f"`{buildtime}`")

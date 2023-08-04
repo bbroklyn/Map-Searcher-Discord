@@ -15,3 +15,4 @@
 17.07.23->Big migration, huge update, +logger, code fix and some command changes;
 21.07.23->Admin command visual changes, changelog command visual changes, and now if you wrote wrong date , bot will print list of them, removed credits command, added csite command, changed help command a bit, optimized mlink ,pack command visual changes ,strack changes ,config json updates ,changed technical stuff in main.py;
 28.07.23->Code optimization, adding remove message button;
+5.08.23->Code optimization, minor changes, visual changes;

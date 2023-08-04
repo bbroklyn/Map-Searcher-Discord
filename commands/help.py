@@ -86,16 +86,6 @@ class Paginator(disnake.ui.View):
         await inter.delete_original_response()   
 
 
-
-command_descriptions = {
-    "mlink": "Gives you the link to download the map from name.",
-    "fastdl": "Link to FastDL.",
-    "admin": "Admin commands. Can restart/shutdown bot.",
-    "help": "Navigation help command.",
-    "about": "About this bot.",
-    "strack": "Get all server information.",
-    "csite": "Checks website and all information about him."
-}
 help_opt = commands.option_enum(["commands", "run usage"])
 @Bot.slash_command(name="help",
                   description="Navigation help command, some information.")
@@ -110,13 +100,13 @@ async def help_command(inter: disnake.ApplicationCommandInteraction,
     command_author_id = inter.author.id
     help_things = {
         "commands": [
-            f"</mlink:1130214840431038484> - {command_descriptions['mlink']}",
-            f"</fastdl:1123717659637321749> - {command_descriptions['fastdl']}",
-            f"</admin:1125154934904586363> - {command_descriptions['admin']}",
-            f"</help:1125453195750166538> - {command_descriptions['help']}",
-            f"</about:1125443661547712644> - {command_descriptions['about']}",
-            f"</strack:1130221660948140154> - {command_descriptions['strack']}",
-            f"</csite:1130920520947351604> - {command_descriptions['csite']}"
+            f"</mlink:1130214840431038484> - Gives you the link to download the map from name.",
+            f"</fastdl:1123717659637321749> - Link to FastDL.",
+            f"</admin:1125154934904586363> - Admin commands. Can restart/shutdown bot.",
+            f"</help:1125453195750166538> - Navigation help command.",
+            f"</about:1125443661547712644> - About this bot.",
+            f"</strack:1130221660948140154> - Get all server information.",
+            f"</csite:1130920520947351604> - Checks website and all information about him."
         ],
         "run usage": [
             f"Current bot uptime: {uptime}",
