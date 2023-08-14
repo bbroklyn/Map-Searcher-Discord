@@ -79,8 +79,6 @@ At the moment the bot is still being implemented to the end, being updated or we
 
 
 # Credits
-**NiceShot** - Coding help.
-
-**koen** - [FastDL](https://www.notkoen.xyz/fastdl/).
-
-**Killik** - Linux server.
+- **NiceShot** - Coding help.
+- **koen** - [FastDL](https://www.notkoen.xyz/fastdl/).
+- **Killik** - first month of bot host.
