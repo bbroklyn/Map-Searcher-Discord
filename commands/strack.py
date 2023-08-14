@@ -1,9 +1,9 @@
 import json
 import datetime
 import socket
+import requests
 
 import a2s
-import requests
 import disnake
 import pandas as pd
 from bs4 import BeautifulSoup as BS
@@ -41,10 +41,10 @@ class ServerPlayers(disnake.ui.View):
         for player, time, score in zip(self.players_list, self.time, self.score):
             player_names_str += f"{player} | {time} | {score}\n"
         if len(player_names_str) == 0:
-            await inter.response.send_message(f"**Players ATM {self.players}**:\n```No one is playing on the server ATM!```", ephemeral=True)
+            await inter.response.send_message(f"**Players ATM\n{self.players}**\n```No one is playing on the server ATM!```", ephemeral=True)
         else:
             await inter.response.send_message("sending player list to your PM", ephemeral=True)
-            await inter.author.send(f"**Players in ({self.server_name}) at {time_now} {self.players}**:\n```Nickname | Time | Score\n{player_names_str}```")
+            await inter.author.send(f"**Server name** - {self.server_name}\n**Players online** - {self.players}:\n```Nickname | Time | Score\n{player_names_str}```")
 
     @disnake.ui.button(style=disnake.ButtonStyle.red, emoji="🗑️", row=2)
     async def delete_message_button(self, button: disnake.ui.Button, inter: disnake.Interaction):

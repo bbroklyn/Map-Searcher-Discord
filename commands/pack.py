@@ -27,7 +27,7 @@ async def pack_command(inter: disnake.ApplicationCommandInteraction,
                 description=f"Your link: [{pack_name}]({pack_link})",
                 color=0xFFFFFF
             )
-            embed.set_footer(text="* If the link is outdated or you have a newer version - contact the owners of this bot")
+            embed.set_footer(text="* If the link is outdated - contact the owners of this bot")
             write_log(f"used /pack {pack_name}", inter.author)  
             await inter.edit_original_message(embed=embed)
             return  
