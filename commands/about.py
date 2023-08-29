@@ -63,7 +63,7 @@ async def about_command(inter: disnake.ApplicationCommandInteraction):
         name="Map Searcher",
         url="https://github.com/br0klyn/Map-Searcher-Bot"
     )
-    ram: float = psutil.virtual_memory().used/1048/1048
+    ram: float = psutil.virtual_memory().used/1024/1024
     ram_formatted = round(ram)
     embed.add_field(name="Bot Version", value=config["version"])
     embed.add_field(name="Up Time", value=f"`{uptime}`")
