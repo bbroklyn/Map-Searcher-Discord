@@ -1,5 +1,5 @@
-# Private configs
-# config.json with bot token
+# Private configs   
 config_main.json
 */__pycache__
 */a_credits.py
+logs/*

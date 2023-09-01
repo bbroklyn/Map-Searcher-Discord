@@ -77,7 +77,7 @@ async def server_track_command(inter: disnake.ApplicationCommandInteraction,
                 gameid = server_info['ID']
                 server_info = a2s.info((server_address,server_port))
                 player_list = a2s.players((server_address,server_port))
-                platform = server_info.platform
+                platform = server_info.platform.capitalize()
                 player_name = []
                 times = []
                 player_score = []

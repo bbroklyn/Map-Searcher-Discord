@@ -54,7 +54,7 @@ class Paginator(disnake.ui.View):
         await inter.edit_original_response()
 
 
-    @disnake.ui.button(label="Previous", style=disnake.ButtonStyle.primary)
+    @disnake.ui.button(label="◀", style=disnake.ButtonStyle.primary)
     async def previous_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         global command_author_id
         if interaction.user.id != command_author_id:
@@ -68,7 +68,7 @@ class Paginator(disnake.ui.View):
     async def page_counter(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         return
 
-    @disnake.ui.button(label="Next", style=disnake.ButtonStyle.primary)
+    @disnake.ui.button(label="▶", style=disnake.ButtonStyle.primary)
     async def next_page_button(self, button: disnake.ui.Button, interaction: disnake.Interaction):
         global command_author_id
         if interaction.user.id != command_author_id:
@@ -98,6 +98,8 @@ async def help_command(inter: disnake.ApplicationCommandInteraction,
     await inter.response.defer()
     global command_author_id
     command_author_id = inter.author.id
+    ram: float = psutil.virtual_memory().used/1024/1024
+    ram_formatted = round(ram)
     help_things = {
         "commands": [
             f"</mlink:1130214840431038484> - Gives you the link to download the map from name.",
@@ -110,7 +112,7 @@ async def help_command(inter: disnake.ApplicationCommandInteraction,
         ],
         "run usage": [
             f"Current bot uptime: {uptime}",
-            f"RAM Usage: {psutil.virtual_memory().percent} %"
+            f"RAM Usage: {ram_formatted}"
         ]
     }
     if option in help_things:
